@@ -33,6 +33,8 @@ public class Audio {
 //    private String mAlbumID;
 
 
+    //todo getDuration without player
+
     public String getID() {
         return mID;
     }

@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.soboleva.vkmusicapp.api.vk.callbacks.AuthListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
-import com.soboleva.vkmusicapp.api.vk.models.Audio;
 import com.soboleva.vkmusicapp.api.vk.models.AudioResponseModel;
 import com.soboleva.vkmusicapp.ui.activities.AudioListActivity;
 import com.soboleva.vkmusicapp.ui.activities.MainActivity;
@@ -23,8 +22,6 @@ public class VkApi {
     private AuthListener mAuthListener;
     private OnAudioListDownloadedListener mOnAudioListDownloadedListener;
     private OnAudioDownloadedListener mOnAudioDownloadedListener;
-
-    private final String PATH = "/data/data/com.soboleva.vkmusicapp/";  //put the downloaded file here
 
     private static final String[] sMyScope = new String[]{
             VKScope.FRIENDS,
@@ -96,7 +93,8 @@ public class VkApi {
         @Override
         public void onComplete(VKResponse response) {
             AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
-            mOnAudioListDownloadedListener.onMusicListDownloaded(audioResponseModel.getAudioResponse().getAudioList());
+            mOnAudioListDownloadedListener.onMusicListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
+                    audioResponseModel.getAudioResponse().getTotalCount());
         }
 
         @Override
@@ -131,23 +129,21 @@ public class VkApi {
         VKSdk.authorize(sMyScope, true, true);
     }
 
-    public void getMyAudio(OnAudioListDownloadedListener onAudioListDownloadedListener) {
+    public void getMyAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count) {
         mOnAudioListDownloadedListener = onAudioListDownloadedListener;
-        VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, 20));
+        VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, count,
+                VKApiConst.OFFSET, offset));
         request.executeWithListener(mAudioRequestListener);
     }
 
-    public void getSearchedAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, String searchRequest) {
+    public void getSearchedAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, String searchRequest, int offset, int count) {
         mOnAudioListDownloadedListener = onAudioListDownloadedListener;
         Timber.d("searching audio %s", searchRequest);
-        VKRequest request = new VKRequest("audio.search", VKParameters.from(VKApiConst.Q, searchRequest, VKApiConst.SORT, 2));
+        VKRequest request = new VKRequest("audio.search", VKParameters.from(VKApiConst.Q, searchRequest, VKApiConst.SORT, 2,
+                VKApiConst.COUNT, count, VKApiConst.OFFSET, offset));
         request.executeWithListener(mAudioRequestListener);
     }
 
-    public void downloadAudio(OnAudioDownloadedListener onAudioDownloadedListener, Audio audio) {
-        mOnAudioDownloadedListener = onAudioDownloadedListener;
-
-    }
 
     public boolean isLoggedIn() {
         return VKSdk.isLoggedIn();

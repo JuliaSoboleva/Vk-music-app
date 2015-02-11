@@ -60,7 +60,6 @@ public class AudioIntentService extends IntentService {
         Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
         if (tmp.exists()) {
             location = tmp.getAbsolutePath();
-            //notifyFinished(location, remoteUrl);
             notifyProgress(true);
             stopSelf();
             return;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import com.soboleva.vkmusicapp.AudioIntentService;
+import com.soboleva.vkmusicapp.Constants;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
@@ -20,7 +21,7 @@ public class AudioListActivity extends Activity {
     private EditText mSearchEditText;
     private ListView mAudioListView;
     private ImageButton mSaveButton;
-    private TextView mResponseText;
+    private boolean mIsMyAudio;
 
     AudioPresenter mAudioPresenter;
 
@@ -29,6 +30,8 @@ public class AudioListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(com.soboleva.vkmusicapp.R.layout.activity_audio_list);
 
+        mIsMyAudio = true;
+
         mAudioPresenter = new AudioPresenter(this);
         setupUI();
         mAudioPresenter.getMyAudio();
@@ -36,7 +39,6 @@ public class AudioListActivity extends Activity {
             @Override
             public void onClick(Audio audio) {
                 Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
-                //mAudioPresenter.downloadAudio(audio);
                 Intent i = new Intent(getApplicationContext(), AudioIntentService.class);
                 i.putExtra("url", audio.getURL());
                 i.putExtra("title", audio.getTitle());
@@ -45,6 +47,35 @@ public class AudioListActivity extends Activity {
 
             }
         }));
+
+        mAudioListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //noop
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int total = mAudioPresenter.getTotalAudioCount();
+                int available = mAudioPresenter.getAvailableAudioCount();
+                if (firstVisibleItem + visibleItemCount >= totalItemCount - 1 && available < total && !mAudioPresenter.isDownloadingNow()) {
+                    if (total - available >= Constants.PAGE_SIZE) {
+                        if (mIsMyAudio) {
+                            mAudioPresenter.getMyAudio(available, Constants.PAGE_SIZE);
+                        } else {
+                            mAudioPresenter.getSearchedAudio(mSearchEditText.getText().toString(), available, Constants.PAGE_SIZE);
+                        }
+                    } else {
+                        if (mIsMyAudio) {
+                            mAudioPresenter.getMyAudio(available, total - available);
+                        } else {
+                            mAudioPresenter.getSearchedAudio(mSearchEditText.getText().toString(), available, total - available);
+                        }
+                    }
+                    Timber.d("need to refresh audioList, totalItemCount = %d ", totalItemCount);
+                }
+            }
+        });
 
     }
 
@@ -56,20 +87,25 @@ public class AudioListActivity extends Activity {
 
 
     private void setupUI() {
-        //Находим элементы
         mSearchButton = (Button) findViewById(R.id.parse);
         mSearchEditText = (EditText) findViewById(R.id.search);
         mAudioListView = (ListView) findViewById(R.id.list);
         mSaveButton = (ImageButton) findViewById(R.id.save);
-        //Регистрируем onClick слушателей
+
         mSearchButton.setOnClickListener(mySearchListener);
-        mResponseText = (TextView) findViewById(R.id.responseText);
+
     }
 
-    //Слушатель OnClickListener для кнопки поиска
     private View.OnClickListener mySearchListener = new View.OnClickListener() {
         public void onClick(View v) {
-            mAudioPresenter.getSearchedAudio(mSearchEditText.getText().toString());
+            if (mSearchEditText.getText().toString().isEmpty()) {
+                mIsMyAudio = true;
+                mAudioPresenter.getMyAudio();
+            } else {
+                mIsMyAudio = false;
+                mAudioPresenter.getSearchedAudio(mSearchEditText.getText().toString());
+            }
+            mAudioListView.smoothScrollToPosition(0);
         }
     };
 
@@ -78,12 +114,10 @@ public class AudioListActivity extends Activity {
 
     }
 
-    public void sayAudioDownloaded(String title) {
-        Toast toast = Toast.makeText(getApplicationContext(), "Audio " + title + " downloaded", Toast.LENGTH_SHORT);
-        toast.show();
+    public void showWithAddedAudio(List<Audio> addedAudioList) {
+        ((AudioListAdapter) mAudioListView.getAdapter()).setAddedAudioList(addedAudioList);
+
     }
-
-
 }
 
 

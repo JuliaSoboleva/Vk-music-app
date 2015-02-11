@@ -1,8 +1,8 @@
 package com.soboleva.vkmusicapp.presenters;
 
 import android.content.Intent;
+import com.soboleva.vkmusicapp.Constants;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
-import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.Audio;
 import com.soboleva.vkmusicapp.ui.activities.AudioListActivity;
@@ -14,10 +14,17 @@ public class AudioPresenter {
 
     private final AudioListActivity mAudioActivity;
     private final VkApi mVkApi;
+    private int mTotalAudioCount;
+    private int mAvailableAudioCount;
+    private boolean mIsDownloadingNow;
 
     public AudioPresenter(AudioListActivity activity) {
         mAudioActivity = activity;
         mVkApi = VkApi.getInstance();
+        mTotalAudioCount = 0;
+        mAvailableAudioCount = 0;
+        mIsDownloadingNow = false;
+
     }
 
     public void onActivityResult(AudioListActivity audioListActivity, int requestCode, int resultCode, Intent data) {
@@ -25,53 +32,75 @@ public class AudioPresenter {
     }
 
     public void getMyAudio() {
+        mAvailableAudioCount = 0;
+        getMyAudio(0, Constants.PAGE_SIZE);
+    }
+
+
+    public void getMyAudio(final int offset, int count) {
+        mIsDownloadingNow = true;
         mVkApi.getMyAudio(new OnAudioListDownloadedListener() {
             @Override
-            public void onMusicListDownloaded(List<Audio> audios) {
-                mAudioActivity.showAudio(audios);
+            public void onMusicListDownloaded(List<Audio> audios, int totalCount) {
+                mAvailableAudioCount += audios.size();
+                Timber.d("mAvailableAudioCount = %d, mTotalAudioCount = %d", mAvailableAudioCount, mTotalAudioCount);
+                if (offset == 0) {
+                    mAudioActivity.showAudio(audios);
+                    mTotalAudioCount = totalCount;
+                } else {
+                    mAudioActivity.showWithAddedAudio(audios);
+                }
+                mIsDownloadingNow = false;
             }
 
             @Override
             public void onError() {
                 Timber.d("getMyAudio Error");
+                mIsDownloadingNow = false;
             }
-        });
+        }, offset, count);
 
     }
 
     public void getSearchedAudio(String searchedRequest) {
+        mAvailableAudioCount = 0;
+        getSearchedAudio(searchedRequest, 0, Constants.PAGE_SIZE);
+    }
+
+    public void getSearchedAudio(String searchedRequest, final int offset, int count) {
+        mIsDownloadingNow = true;
         mVkApi.getSearchedAudio(new OnAudioListDownloadedListener() {
             @Override
-            public void onMusicListDownloaded(List<Audio> audios) {
-                mAudioActivity.showAudio(audios);
+            public void onMusicListDownloaded(List<Audio> audios, int totalCount) {
+                mAvailableAudioCount += audios.size();
+                if (offset == 0) {
+                    mAudioActivity.showAudio(audios);
+                    mTotalAudioCount = totalCount;
+
+                } else {
+                    mAudioActivity.showWithAddedAudio(audios);
+                }
+                mIsDownloadingNow = false;
             }
 
             @Override
             public void onError() {
                 Timber.d("getSearchedAudio Error");
+                mIsDownloadingNow = false;
             }
-        }, searchedRequest);
+        }, searchedRequest, offset, count);
     }
 
-    public void getMyAudio(int offset, int count) {
-
+    public int getTotalAudioCount() {
+        return mTotalAudioCount;
     }
 
-    public void downloadAudio(Audio audio) {
-        mVkApi.downloadAudio(new OnAudioDownloadedListener() {
-            @Override
-            public void onAudioDownloaded(String title) {
-                mAudioActivity.sayAudioDownloaded(title);
-            }
-
-            @Override
-            public void onError() {
-                Timber.d("downloadAudio Error");
-            }
-        }, audio);
-
+    public int getAvailableAudioCount() {
+        return mAvailableAudioCount;
     }
 
-
+    public boolean isDownloadingNow() {
+        return mIsDownloadingNow;
+    }
 }
 

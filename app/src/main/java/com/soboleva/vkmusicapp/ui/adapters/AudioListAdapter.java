@@ -16,6 +16,7 @@ public class AudioListAdapter extends BaseAdapter {
     private List<Audio> mAudioList;
     private OnButtonClickListener mButtonClickListener;
 
+
     public static interface OnButtonClickListener {
         void onClick(Audio audio);
     }
@@ -27,6 +28,11 @@ public class AudioListAdapter extends BaseAdapter {
 
     public void setAudioList(List<Audio> audioList) {
         mAudioList = audioList;
+        notifyDataSetChanged();
+    }
+
+    public void setAddedAudioList(List<Audio> audioList) {
+        mAudioList.addAll(audioList);
         notifyDataSetChanged();
     }
 
