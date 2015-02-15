@@ -1,10 +1,9 @@
 package com.soboleva.vkmusicapp.presenters;
 
 import android.content.Intent;
-import com.soboleva.vkmusicapp.Constants;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
-import com.soboleva.vkmusicapp.api.vk.models.Audio;
+import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.ui.activities.AudioListActivity;
 import timber.log.Timber;
 
@@ -17,6 +16,8 @@ public class AudioPresenter {
     private int mTotalAudioCount;
     private int mAvailableAudioCount;
     private boolean mIsDownloadingNow;
+
+    public static final int PAGE_SIZE = 20;
 
     public AudioPresenter(AudioListActivity activity) {
         mAudioActivity = activity;
@@ -33,7 +34,7 @@ public class AudioPresenter {
 
     public void getMyAudio() {
         mAvailableAudioCount = 0;
-        getMyAudio(0, Constants.PAGE_SIZE);
+        getMyAudio(0, PAGE_SIZE);
     }
 
 
@@ -41,7 +42,7 @@ public class AudioPresenter {
         mIsDownloadingNow = true;
         mVkApi.getMyAudio(new OnAudioListDownloadedListener() {
             @Override
-            public void onMusicListDownloaded(List<Audio> audios, int totalCount) {
+            public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
                 mAvailableAudioCount += audios.size();
                 Timber.d("mAvailableAudioCount = %d, mTotalAudioCount = %d", mAvailableAudioCount, mTotalAudioCount);
                 if (offset == 0) {
@@ -64,14 +65,14 @@ public class AudioPresenter {
 
     public void getSearchedAudio(String searchedRequest) {
         mAvailableAudioCount = 0;
-        getSearchedAudio(searchedRequest, 0, Constants.PAGE_SIZE);
+        getSearchedAudio(searchedRequest, 0, PAGE_SIZE);
     }
 
     public void getSearchedAudio(String searchedRequest, final int offset, int count) {
         mIsDownloadingNow = true;
         mVkApi.getSearchedAudio(new OnAudioListDownloadedListener() {
             @Override
-            public void onMusicListDownloaded(List<Audio> audios, int totalCount) {
+            public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
                 mAvailableAudioCount += audios.size();
                 if (offset == 0) {
                     mAudioActivity.showAudio(audios);

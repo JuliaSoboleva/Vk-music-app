@@ -3,9 +3,8 @@ package com.soboleva.vkmusicapp.api.vk;
 import android.content.Intent;
 import com.google.gson.Gson;
 import com.soboleva.vkmusicapp.api.vk.callbacks.AuthListener;
-import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
-import com.soboleva.vkmusicapp.api.vk.models.AudioResponseModel;
+import com.soboleva.vkmusicapp.api.vk.models.audios.AudioResponseModel;
 import com.soboleva.vkmusicapp.ui.activities.AudioListActivity;
 import com.soboleva.vkmusicapp.ui.activities.MainActivity;
 import com.vk.sdk.*;
@@ -15,13 +14,16 @@ import timber.log.Timber;
 
 public class VkApi {
 
+    //Этот ID предназначен только для примера. Пожалуйста замение его ID своего приложения.
+    //private static String API_ID = "2904017";
+    private static String API_ID = "3974615";
+
     private static VkApi sInstance;
 
     private Gson mGson = new Gson();
 
     private AuthListener mAuthListener;
     private OnAudioListDownloadedListener mOnAudioListDownloadedListener;
-    private OnAudioDownloadedListener mOnAudioDownloadedListener;
 
     private static final String[] sMyScope = new String[]{
             VKScope.FRIENDS,
@@ -93,7 +95,7 @@ public class VkApi {
         @Override
         public void onComplete(VKResponse response) {
             AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
-            mOnAudioListDownloadedListener.onMusicListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
+            mOnAudioListDownloadedListener.onAudioListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
                     audioResponseModel.getAudioResponse().getTotalCount());
         }
 
@@ -116,7 +118,7 @@ public class VkApi {
 
     public void initialize() {
         Timber.d("VkApi.initialize()");
-        VKSdk.initialize(mVKSdkListener, "3974615");
+        VKSdk.initialize(mVKSdkListener, API_ID);
     }
 
     public void logOut() {
@@ -142,6 +144,10 @@ public class VkApi {
         VKRequest request = new VKRequest("audio.search", VKParameters.from(VKApiConst.Q, searchRequest, VKApiConst.SORT, 2,
                 VKApiConst.COUNT, count, VKApiConst.OFFSET, offset));
         request.executeWithListener(mAudioRequestListener);
+    }
+
+    public void getFriends() {
+
     }
 
 

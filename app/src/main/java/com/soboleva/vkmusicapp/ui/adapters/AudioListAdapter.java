@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.soboleva.vkmusicapp.R;
-import com.soboleva.vkmusicapp.api.vk.models.Audio;
+import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 
 import java.util.ArrayList;
 import java.util.List;

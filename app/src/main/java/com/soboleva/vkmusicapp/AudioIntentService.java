@@ -25,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 public class AudioIntentService extends IntentService {
 
+    public static final String URL = "url";
+    public static final String ARTIST = "artist";
+    public static final String TITLE = "title";
     private File cacheDir;
     private NotificationManager mNotifyManager;
 
@@ -50,16 +53,16 @@ public class AudioIntentService extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent) {
-        String remoteUrl = intent.getExtras().getString("url");
-        String location;
-        String artist = intent.getExtras().getString("artist");
-        String title = intent.getExtras().getString("title");
+        String remoteUrl = intent.getExtras().getString(AudioIntentService.URL);
+        String artist = intent.getExtras().getString(AudioIntentService.ARTIST);
+        String title = intent.getExtras().getString(AudioIntentService.TITLE);
+
+        title = title.replace("\\", "").replace("/", "");
         String filename = title + ".mp3";
 
         File tmp = new File(cacheDir.getPath() + File.separator + filename);
         Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
         if (tmp.exists()) {
-            location = tmp.getAbsolutePath();
             notifyProgress(true);
             stopSelf();
             return;
@@ -88,7 +91,6 @@ public class AudioIntentService extends IntentService {
             fos.close();
             is.close();
 
-
             // add new file to your media library
             ContentValues values = new ContentValues(4);
             long cur = System.currentTimeMillis();
@@ -105,11 +107,9 @@ public class AudioIntentService extends IntentService {
             Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             Uri newUri = contentResolver.insert(base, values);
 
-// Notifiy the media application on the device
+            // Notifiy the media application on the device
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
 
-            location = tmp.getAbsolutePath();
-            //notifyFinished(location, remoteUrl);
         } catch (Exception e) {
             Log.e("Service", "Failed!", e);
         }
@@ -133,7 +133,6 @@ public class AudioIntentService extends IntentService {
                                 mBuilder.setProgress(mFileSize, baf.length(), false);
                                 mNotifyManager.notify(id, mBuilder.build());
                                 try {
-                                    // Sleep for 1 seconds == 1000
                                     Thread.sleep(50);
                                 } catch (InterruptedException e) {
                                     Timber.d("sleep failure");

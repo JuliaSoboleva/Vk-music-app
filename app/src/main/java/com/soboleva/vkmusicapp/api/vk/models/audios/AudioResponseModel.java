@@ -1,4 +1,4 @@
-package com.soboleva.vkmusicapp.api.vk.models;
+package com.soboleva.vkmusicapp.api.vk.models.audios;
 
 import com.google.gson.annotations.SerializedName;
 
