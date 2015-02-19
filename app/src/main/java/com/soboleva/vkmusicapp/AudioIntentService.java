@@ -63,7 +63,7 @@ public class AudioIntentService extends IntentService {
         File tmp = new File(cacheDir.getPath() + File.separator + filename);
         Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
         if (tmp.exists()) {
-            notifyProgress(true);
+            notifyProgress(true, title);
             stopSelf();
             return;
         }
@@ -80,7 +80,7 @@ public class AudioIntentService extends IntentService {
             BufferedInputStream bis = new BufferedInputStream(is);
             baf = new ByteArrayBuffer(50);
 
-            notifyProgress(false);
+            notifyProgress(false, title);
 
             int current = 0;
             while ((current = bis.read()) != -1) {
@@ -116,12 +116,12 @@ public class AudioIntentService extends IntentService {
 
     }
 
-    private void notifyProgress(final boolean finished) {
+    private void notifyProgress(final boolean finished, final String title) {
 
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle("Audio Download")
-                .setContentText("Download in progress")
+        mBuilder.setContentTitle(title)
+                .setContentText("Downloading...")
                 .setSmallIcon(R.drawable.ic_launcher);
 
         new Thread(

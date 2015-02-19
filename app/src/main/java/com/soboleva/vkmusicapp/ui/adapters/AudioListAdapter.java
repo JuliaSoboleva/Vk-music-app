@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
@@ -55,7 +55,7 @@ public class AudioListAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView mTitle;
         TextView mArtist;
-        ImageButton mSaveButton;
+        Button mSaveButton;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class AudioListAdapter extends BaseAdapter {
 
             holder.mTitle = (TextView) convertView.findViewById(R.id.text1);
             holder.mArtist = (TextView) convertView.findViewById(R.id.text2);
-            holder.mSaveButton = (ImageButton) convertView.findViewById(R.id.save);
+            holder.mSaveButton = (Button) convertView.findViewById(R.id.save);
 
             convertView.setTag(holder);
 
