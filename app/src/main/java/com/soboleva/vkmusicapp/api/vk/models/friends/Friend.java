@@ -2,7 +2,9 @@ package com.soboleva.vkmusicapp.api.vk.models.friends;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Friend {
+import java.io.Serializable;
+
+public class Friend implements Serializable{
     @SerializedName("id")
     private String mID;
 

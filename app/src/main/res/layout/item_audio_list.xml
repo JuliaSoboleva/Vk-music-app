@@ -4,25 +4,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:ignore="ContentDescription"
-                android:padding="16dp"
+                android:padding="@dimen/padding_normal"
         >
 
     <ImageView
             android:id="@+id/audio_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_note"
+            android:layout_width="@dimen/icon_normal"
+            android:layout_height="@dimen/icon_normal"
+            android:layout_marginRight="@dimen/margin_normal"
             android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_note"
             />
 
     <Button
             android:id="@+id/save"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/button_small"
+            android:layout_height="@dimen/button_small"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="@dimen/margin_normal"
             android:background="@drawable/download_button_selector"
+            />
+
+    <Button
+            android:id="@+id/add"
+            android:layout_width="@dimen/button_small"
+            android:layout_height="@dimen/button_small"
+            android:layout_toLeftOf="@id/save"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:background="@drawable/ic_add_black_24dp"
+            android:visibility="gone"
             />
 
 
@@ -31,12 +41,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/audio_image"
-            android:layout_toLeftOf="@id/save"
+            android:layout_toLeftOf="@id/add"
             android:layout_alignTop="@id/audio_image"
-            android:textSize="16sp"
-            tools:text="This is text"
+            android:textSize="@dimen/font_normal"
             android:maxLines="1"
             android:ellipsize="end"
+            tools:text="This is text"
             />
 
     <TextView
@@ -44,16 +54,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/audio_image"
-            android:layout_toLeftOf="@id/save"
+            android:layout_toLeftOf="@id/add"
             android:layout_below="@id/text1"
-
-            android:textSize="14sp"
-            tools:text="This is text2"
+            android:textSize="@dimen/font_small"
             android:maxLines="2"
             android:ellipsize="end"
+            tools:text="This is text2"
             />
-
-
-
-
 </RelativeLayout>

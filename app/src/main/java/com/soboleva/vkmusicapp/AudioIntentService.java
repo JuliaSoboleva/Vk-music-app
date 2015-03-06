@@ -92,6 +92,7 @@ public class AudioIntentService extends IntentService {
             is.close();
 
             // add new file to your media library
+            //todo why 4?
             ContentValues values = new ContentValues(4);
             long cur = System.currentTimeMillis();
             values.put(MediaStore.Audio.Media.TITLE, title);

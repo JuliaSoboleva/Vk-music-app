@@ -1,17 +1,16 @@
 package com.soboleva.vkmusicapp.presenters;
 
-import android.content.Intent;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
-import com.soboleva.vkmusicapp.ui.activities.AudioListActivity;
+import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
 import timber.log.Timber;
 
 import java.util.List;
 
 public class AudioPresenter {
 
-    private final AudioListActivity mAudioActivity;
+    private final AudioListFragment mAudioListFragment;
     private final VkApi mVkApi;
     private int mTotalAudioCount;
     private int mAvailableAudioCount;
@@ -19,17 +18,15 @@ public class AudioPresenter {
 
     public static final int PAGE_SIZE = 20;
 
-    public AudioPresenter(AudioListActivity activity) {
-        mAudioActivity = activity;
+
+
+    public AudioPresenter(AudioListFragment fragment) {
+        mAudioListFragment = fragment;
         mVkApi = VkApi.getInstance();
         mTotalAudioCount = 0;
         mAvailableAudioCount = 0;
         mIsDownloadingNow = false;
 
-    }
-
-    public void onActivityResult(AudioListActivity audioListActivity, int requestCode, int resultCode, Intent data) {
-        mVkApi.onActivityResult(audioListActivity, requestCode, resultCode, data);
     }
 
     public void getMyAudio() {
@@ -46,10 +43,10 @@ public class AudioPresenter {
                 mAvailableAudioCount += audios.size();
                 Timber.d("mAvailableAudioCount = %d, mTotalAudioCount = %d", mAvailableAudioCount, mTotalAudioCount);
                 if (offset == 0) {
-                    mAudioActivity.showAudio(audios);
+                    mAudioListFragment.showAudio(audios);
                     mTotalAudioCount = totalCount;
                 } else {
-                    mAudioActivity.showWithAddedAudio(audios);
+                    mAudioListFragment.showWithAddedAudio(audios);
                 }
                 mIsDownloadingNow = false;
             }
@@ -75,11 +72,11 @@ public class AudioPresenter {
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
                 mAvailableAudioCount += audios.size();
                 if (offset == 0) {
-                    mAudioActivity.showAudio(audios);
+                    mAudioListFragment.showAudio(audios);
                     mTotalAudioCount = totalCount;
 
                 } else {
-                    mAudioActivity.showWithAddedAudio(audios);
+                    mAudioListFragment.showWithAddedAudio(audios);
                 }
                 mIsDownloadingNow = false;
             }
@@ -91,6 +88,7 @@ public class AudioPresenter {
             }
         }, searchedRequest, offset, count);
     }
+
 
     public int getTotalAudioCount() {
         return mTotalAudioCount;

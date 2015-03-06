@@ -27,13 +27,13 @@ public class AudioListAdapter extends BaseAdapter {
     }
 
     public void setAudioList(List<Audio> audioList) {
-        mAudioList = audioList;
-        notifyDataSetChanged();
+        mAudioList.clear();
+        mAudioList.addAll(audioList);
     }
 
     public void setAddedAudioList(List<Audio> audioList) {
         mAudioList.addAll(audioList);
-        notifyDataSetChanged();
+
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AudioListAdapter extends BaseAdapter {
 
         if (convertView == null) {
 
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_audio_list_item, parent,
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_audio_list, parent,
                     false);
 
             holder = new ViewHolder();
