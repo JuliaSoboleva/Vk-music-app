@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
-import com.soboleva.vkmusicapp.presenters.AudioPresenter;
+import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.presenters.FriendPresenter;
 import com.soboleva.vkmusicapp.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicapp.ui.adapters.FriendListAdapter;
@@ -59,8 +59,8 @@ public class FriendListFragment extends Fragment {
                 int total = mFriendPresenter.getTotalFriendCount();
                 int available = mFriendPresenter.getAvailableFriendCount();
                 if (firstVisibleItem + visibleItemCount >= totalItemCount - 1 && available < total && !mFriendPresenter.isDownloadingNow()) {
-                    if (total - available >= AudioPresenter.PAGE_SIZE) {
-                        mFriendPresenter.getMyFriends(available, AudioPresenter.PAGE_SIZE);
+                    if (total - available >= OwnAudioPresenter.PAGE_SIZE) {
+                        mFriendPresenter.getMyFriends(available, OwnAudioPresenter.PAGE_SIZE);
                     } else {
                         mFriendPresenter.getMyFriends(available, total - available);
                     }

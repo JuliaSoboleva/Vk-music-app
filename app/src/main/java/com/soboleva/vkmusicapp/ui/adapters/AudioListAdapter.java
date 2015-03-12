@@ -14,16 +14,30 @@ import java.util.List;
 
 public class AudioListAdapter extends BaseAdapter {
     private List<Audio> mAudioList;
-    private OnButtonClickListener mButtonClickListener;
+    private OnDownloadButtonClickListener mDownloadButtonClickListener;
+    private OnAddButtonClickListener mOnAddButtonClickListener;
+    private boolean mAddAble;
 
 
-    public static interface OnButtonClickListener {
+    public static interface OnDownloadButtonClickListener {
         void onClick(Audio audio);
     }
 
-    public AudioListAdapter(OnButtonClickListener onButtonClickListener) {
+    public static interface OnAddButtonClickListener {
+        void onClick(Audio audio);
+    }
+
+    public AudioListAdapter(OnDownloadButtonClickListener onDownloadButtonClickListener) {
         mAudioList = new ArrayList<>();
-        mButtonClickListener = onButtonClickListener;
+        mDownloadButtonClickListener = onDownloadButtonClickListener;
+        mAddAble = false;
+    }
+
+    public AudioListAdapter(OnDownloadButtonClickListener onDownloadButtonClickListener, OnAddButtonClickListener onAddButtonClickListener) {
+        mAudioList = new ArrayList<>();
+        mDownloadButtonClickListener = onDownloadButtonClickListener;
+        mOnAddButtonClickListener = onAddButtonClickListener;
+        mAddAble = true;
     }
 
     public void setAudioList(List<Audio> audioList) {
@@ -56,6 +70,7 @@ public class AudioListAdapter extends BaseAdapter {
         TextView mTitle;
         TextView mArtist;
         Button mSaveButton;
+        Button mAddButton;
     }
 
     @Override
@@ -77,6 +92,10 @@ public class AudioListAdapter extends BaseAdapter {
             holder.mTitle = (TextView) convertView.findViewById(R.id.text1);
             holder.mArtist = (TextView) convertView.findViewById(R.id.text2);
             holder.mSaveButton = (Button) convertView.findViewById(R.id.save);
+            if (mAddAble) {
+                holder.mAddButton = (Button) convertView.findViewById(R.id.button_add);
+                holder.mAddButton.setVisibility(View.VISIBLE);
+            }
 
             convertView.setTag(holder);
 
@@ -93,9 +112,17 @@ public class AudioListAdapter extends BaseAdapter {
         holder.mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mButtonClickListener.onClick(audio);
+                mDownloadButtonClickListener.onClick(audio);
             }
         });
+        if (mAddAble) {
+            holder.mAddButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnAddButtonClickListener.onClick(audio);
+                }
+            });
+        }
 
 
         return convertView;

@@ -97,7 +97,7 @@ public class FriendListAdapter extends BaseAdapter {
             holder.mName = (TextView) convertView.findViewById(R.id.text_friend_name);
 
             holder.mPhoto = (ImageView ) convertView.findViewById(R.id.image_friend_photo);
-            //holder.mPhoto.setBorderColor(Color.LTGRAY);
+
 
             convertView.setTag(holder);
 

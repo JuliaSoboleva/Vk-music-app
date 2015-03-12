@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
+import com.soboleva.vkmusicapp.ui.fragments.OwnAudioListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.FriendListFragment;
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -25,7 +25,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         mCurrentPosition = position;
         switch (position) {
             case 0:
-                return AudioListFragment.newInstance(mContext);
+                return OwnAudioListFragment.newInstance(mContext);
             case 1:
                 return FriendListFragment.newInstance(mContext);
             default:
