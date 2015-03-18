@@ -17,18 +17,18 @@ public class SearchAudioPresenter extends AudioPresenter {
     }
 
     @Override
-    public void getAudio(final int offset, int count) {
+    public void getItems(final int offset, int count) {
         mIsDownloadingNow = true;
         mVkApi.getSearchedAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
-                mAvailableAudioCount += audios.size();
+                mAvailableItemCount += audios.size();
                 if (offset == 0) {
-                    mAudioFragment.showAudio(audios);
-                    mTotalAudioCount = totalCount;
+                    mBaseListFragment.showItems(audios);
+                    mTotalItemCount = totalCount;
 
                 } else {
-                    mAudioFragment.showWithAddedAudio(audios);
+                    mBaseListFragment.showWithAddedItems(audios);
                 }
                 mIsDownloadingNow = false;
             }

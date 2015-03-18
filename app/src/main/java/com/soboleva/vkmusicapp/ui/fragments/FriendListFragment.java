@@ -4,22 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
+import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
 import com.soboleva.vkmusicapp.presenters.FriendPresenter;
-import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicapp.ui.adapters.FriendListAdapter;
-import timber.log.Timber;
 
 import java.util.List;
 
-public class FriendListFragment extends ListFragment {
-
-    private FriendPresenter mFriendPresenter;
+public class FriendListFragment extends BaseListFragment {
 
 
     // newInstance constructor for creating fragment with arguments
@@ -31,8 +26,8 @@ public class FriendListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFriendPresenter = new FriendPresenter(this);
-        mFriendPresenter.getMyFriends();
+        mBaseListPresenter = new FriendPresenter(this);
+        mBaseListPresenter.getItems();
 
         setListAdapter(new FriendListAdapter(getActivity()));
     }
@@ -40,26 +35,6 @@ public class FriendListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //noop
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int total = mFriendPresenter.getTotalFriendCount();
-                int available = mFriendPresenter.getAvailableFriendCount();
-                if (firstVisibleItem + visibleItemCount >= totalItemCount - 1 && available < total && !mFriendPresenter.isDownloadingNow()) {
-                    if (total - available >= OwnAudioPresenter.PAGE_SIZE) {
-                        mFriendPresenter.getMyFriends(available, OwnAudioPresenter.PAGE_SIZE);
-                    } else {
-                        mFriendPresenter.getMyFriends(available, total - available);
-                    }
-                    Timber.d("need to refresh friendList, totalItemCount = %d ", totalItemCount);
-                }
-            }
-        });
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,15 +47,16 @@ public class FriendListFragment extends ListFragment {
         });
     }
 
-    public void showFriends(List<Friend> friendList) {
+    @Override
+    public void showItems(List<? extends BaseData> dataList) {
         FriendListAdapter adapter = (FriendListAdapter) getListAdapter();
-        adapter.setFriendList(friendList);
-
+        adapter.setFriendList((List<Friend>)dataList);
     }
 
-    public void showWithAddedFriends(List<Friend> addedFriendList) {
-        ((FriendListAdapter) getListAdapter()).setAddedFriendList(addedFriendList);
-
+    @Override
+    public void showWithAddedItems(List<? extends BaseData> dataList) {
+        FriendListAdapter adapter = (FriendListAdapter) getListAdapter();
+        adapter.setAddedFriendList((List<Friend>)dataList);
     }
 
 }

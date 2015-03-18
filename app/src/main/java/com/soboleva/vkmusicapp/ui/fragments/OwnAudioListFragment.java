@@ -10,7 +10,7 @@ import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 public class OwnAudioListFragment extends AudioListFragment {
 
     // newInstance constructor for creating fragment with arguments
-    public static Fragment newInstance(Context context) {
+    public static Fragment instantiate(Context context) {
         return Fragment.instantiate(context, OwnAudioListFragment.class.getName());
     }
 
@@ -18,8 +18,8 @@ public class OwnAudioListFragment extends AudioListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAudioPresenter = new OwnAudioPresenter(this);
-        mAudioPresenter.getAudio();
+        mBaseListPresenter = new OwnAudioPresenter(this);
+        mBaseListPresenter.getItems();
 
         setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
             @Override

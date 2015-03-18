@@ -24,8 +24,8 @@ public class SearchAudioListFragment extends AudioListFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
 
-        mAudioPresenter = new SearchAudioPresenter(this, bundle.getString(REQUEST_KEY));
-        mAudioPresenter.getAudio();
+        mBaseListPresenter = new SearchAudioPresenter(this, bundle.getString(REQUEST_KEY));
+        mBaseListPresenter.getItems();
 
         setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
             @Override

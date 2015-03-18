@@ -1,53 +1,30 @@
 package com.soboleva.vkmusicapp.presenters;
 
-import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnFriendListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
-import com.soboleva.vkmusicapp.ui.fragments.FriendListFragment;
+import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
 import timber.log.Timber;
 
 import java.util.List;
 
-public class FriendPresenter {
+public class FriendPresenter extends BaseListPresenter {
 
-    private final FriendListFragment mFriendListFragment;
-    private final VkApi mVkApi;
-    private int mTotalFriendCount;
-    private int mAvailableFriendCount;
-
-    private boolean mIsDownloadingNow;
-
-    public static final int PAGE_SIZE = 20;
-
-
-
-    public FriendPresenter(FriendListFragment fragment) {
-        mFriendListFragment = fragment;
-        mVkApi = VkApi.getInstance();
-        mTotalFriendCount = 0;
-        mAvailableFriendCount = 0;
-        mIsDownloadingNow = false;
-
+    public FriendPresenter(BaseListFragment baseListFragment) {
+        super(baseListFragment);
     }
 
-    public void getMyFriends() {
-        mAvailableFriendCount = 0;
-        getMyFriends(0, PAGE_SIZE);
-    }
-
-
-    public void getMyFriends(final int offset, int count) {
+    public void getItems(final int offset, int count) {
         mIsDownloadingNow = true;
         mVkApi.getFriends(new OnFriendListDownloadedListener() {
             @Override
             public void onFriendListDownloaded(List<Friend> friends, int totalCount) {
-                mAvailableFriendCount += friends.size();
-                Timber.d("mAvailableFriendCount = %d, mTotalFriendCount = %d", mAvailableFriendCount, mTotalFriendCount);
+                mAvailableItemCount += friends.size();
+                Timber.d("mAvailableFriendCount = %d, mTotalFriendCount = %d", mAvailableItemCount, mTotalItemCount);
                 if (offset == 0) {
-                    mFriendListFragment.showFriends(friends);
-                    mTotalFriendCount = totalCount;
+                    mBaseListFragment.showItems(friends);
+                    mTotalItemCount = totalCount;
                 } else {
-                    mFriendListFragment.showWithAddedFriends(friends);
+                    mBaseListFragment.showWithAddedItems(friends);
                 }
                 mIsDownloadingNow = false;
             }
@@ -61,15 +38,4 @@ public class FriendPresenter {
 
     }
 
-    public int getTotalFriendCount() {
-        return mTotalFriendCount;
-    }
-
-    public int getAvailableFriendCount() {
-        return mAvailableFriendCount;
-    }
-
-    public boolean isDownloadingNow() {
-        return mIsDownloadingNow;
-    }
 }

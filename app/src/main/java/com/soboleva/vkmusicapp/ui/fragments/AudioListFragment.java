@@ -1,56 +1,27 @@
 package com.soboleva.vkmusicapp.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.view.View;
-import android.widget.AbsListView;
+import android.support.v4.app.Fragment;
 import com.soboleva.vkmusicapp.AudioIntentService;
+import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
-import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 import timber.log.Timber;
 
 import java.util.List;
 
-public class AudioListFragment extends ListFragment {
+public class AudioListFragment extends BaseListFragment {
 
-//    protected ListView mAudioListView;
-    protected AudioPresenter mAudioPresenter;
+    public static Fragment instantiate(Context context) {
+        return Fragment.instantiate(context, AudioListFragment.class.getName());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setScrollListener();
-    }
-
-    protected void setScrollListener() {
-        this.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //noop
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int total = mAudioPresenter.getTotalAudioCount();
-                int available = mAudioPresenter.getAvailableAudioCount();
-                if (firstVisibleItem + visibleItemCount >= totalItemCount - 1 && available < total && !mAudioPresenter.isDownloadingNow()) {
-                    if (total - available >= OwnAudioPresenter.PAGE_SIZE) {
-                        mAudioPresenter.getAudio(available, AudioPresenter.PAGE_SIZE);
-                    } else {
-                        mAudioPresenter.getAudio(available, total - available);
-                    }
-                    Timber.d("need to refresh audioList, totalItemCount = %d ", totalItemCount);
-                }
-            }
-        });
     }
 
     public void downloadAudio(Audio audio) {
@@ -63,19 +34,23 @@ public class AudioListFragment extends ListFragment {
     }
 
     public void addAudio(Audio audio) {
-        mAudioPresenter.addAudio(audio);
+        AudioPresenter audioPresenter = (AudioPresenter)mBaseListPresenter;
+        audioPresenter.addAudio(audio);
     }
 
 
-    public void showAudio(List<Audio> audioList) {
+    @Override
+    public void showItems(List<? extends BaseData> dataList) {
         AudioListAdapter adapter = (AudioListAdapter)getListAdapter();
-        adapter.setAudioList(audioList);
+        //List<Audio> audios = dataList;
+        adapter.setAudioList((List<Audio>)dataList);
         adapter.notifyDataSetChanged();
     }
 
-    public void showWithAddedAudio(List<Audio> addedAudioList) {
+    @Override
+    public void showWithAddedItems(List<? extends BaseData> dataList) {
         AudioListAdapter adapter = (AudioListAdapter)getListAdapter();
-        adapter.setAddedAudioList(addedAudioList);
+        adapter.setAddedAudioList((List<Audio>)dataList);
         adapter.notifyDataSetChanged();
     }
 }

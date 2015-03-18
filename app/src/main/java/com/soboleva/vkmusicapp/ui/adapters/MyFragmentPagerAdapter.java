@@ -25,7 +25,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         mCurrentPosition = position;
         switch (position) {
             case 0:
-                return OwnAudioListFragment.newInstance(mContext);
+                return OwnAudioListFragment.instantiate(mContext);
             case 1:
                 return FriendListFragment.newInstance(mContext);
             default:

@@ -24,8 +24,8 @@ public class FriendAudioListFragment extends AudioListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAudioPresenter = new FriendAudioPresenter(this, (Friend)getArguments().getSerializable(FriendAudioActivity.FRIEND));
-        mAudioPresenter.getAudio();
+        mBaseListPresenter = new FriendAudioPresenter(this, (Friend)getArguments().getSerializable(FriendAudioActivity.FRIEND));
+        mBaseListPresenter.getItems();
 
         setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
             @Override

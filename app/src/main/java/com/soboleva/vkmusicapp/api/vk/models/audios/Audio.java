@@ -1,8 +1,9 @@
 package com.soboleva.vkmusicapp.api.vk.models.audios;
 
 import com.google.gson.annotations.SerializedName;
+import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 
-public class Audio {
+public class Audio extends BaseData {
 
     @SerializedName("id")
     private String mID;
