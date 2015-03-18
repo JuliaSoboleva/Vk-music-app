@@ -1,9 +1,10 @@
 package com.soboleva.vkmusicapp.ui.fragments;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListView;
 import com.soboleva.vkmusicapp.AudioIntentService;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
@@ -13,14 +14,24 @@ import timber.log.Timber;
 
 import java.util.List;
 
-public class AudioListFragment extends Fragment {
+public class AudioListFragment extends ListFragment {
 
-    protected ListView mAudioListView;
+//    protected ListView mAudioListView;
     protected AudioPresenter mAudioPresenter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-    private void setScrollListener() {
-        mAudioListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setScrollListener();
+    }
+
+    protected void setScrollListener() {
+        this.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 //noop
@@ -42,7 +53,7 @@ public class AudioListFragment extends Fragment {
         });
     }
 
-    protected void downloadAudio(Audio audio) {
+    public void downloadAudio(Audio audio) {
         Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
         Intent i = new Intent(getActivity().getApplicationContext(), AudioIntentService.class);
         i.putExtra(AudioIntentService.URL, audio.getURL());
@@ -51,17 +62,20 @@ public class AudioListFragment extends Fragment {
         getActivity().getApplicationContext().startService(i);
     }
 
+    public void addAudio(Audio audio) {
+        mAudioPresenter.addAudio(audio);
+    }
+
 
     public void showAudio(List<Audio> audioList) {
-        AudioListAdapter adapter = (AudioListAdapter) mAudioListView.getAdapter();
+        AudioListAdapter adapter = (AudioListAdapter)getListAdapter();
         adapter.setAudioList(audioList);
         adapter.notifyDataSetChanged();
     }
 
     public void showWithAddedAudio(List<Audio> addedAudioList) {
-        AudioListAdapter adapter = (AudioListAdapter) mAudioListView.getAdapter();
+        AudioListAdapter adapter = (AudioListAdapter)getListAdapter();
         adapter.setAddedAudioList(addedAudioList);
         adapter.notifyDataSetChanged();
-
     }
 }

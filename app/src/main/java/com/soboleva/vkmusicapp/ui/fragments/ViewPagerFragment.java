@@ -21,19 +21,25 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         mCurrentFragmentIndex = 0;
         super.onCreate(savedInstanceState);
+        Timber.d("viewPager -> onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("viewPager -> onCreateView");
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
         mPager = (ViewPager) view.findViewById(R.id.pager);
         setupPagerAdapter();
         return view;
     }
 
+
+
     private void setupPagerAdapter() {
 
-        mPagerAdapter = new MyFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
+        Timber.d("viewPager -> setupPagerAdapter");
+
+        mPagerAdapter = new MyFragmentPagerAdapter(/*getActivity().getSupportFragmentManager()*/getChildFragmentManager(), getActivity());
         mPager.setAdapter(mPagerAdapter);
 
         mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

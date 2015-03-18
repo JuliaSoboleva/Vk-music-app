@@ -39,6 +39,8 @@ public class AudioListActivity extends ActionBarActivity {
 
     }
 
+
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
@@ -108,11 +110,6 @@ public class AudioListActivity extends ActionBarActivity {
         fragmentTransaction.add(R.id.fragment_container, viewPagerFragment);
         fragmentTransaction.commit();
     }
-
-
-
-
-
 
 }
 

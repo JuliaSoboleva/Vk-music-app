@@ -1,6 +1,5 @@
 package com.soboleva.vkmusicapp.presenters;
 
-import android.support.v4.app.Fragment;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
@@ -15,8 +14,8 @@ public abstract class AudioPresenter {
 
     public static final int PAGE_SIZE = 20;
 
-    public AudioPresenter(Fragment fragment) {
-        mAudioFragment = (AudioListFragment)fragment;
+    public AudioPresenter(AudioListFragment fragment) {
+        mAudioFragment = fragment;
         mVkApi = VkApi.getInstance();
         mTotalAudioCount = 0;
         mAvailableAudioCount = 0;
@@ -29,7 +28,7 @@ public abstract class AudioPresenter {
     }
 
     public void addAudio(Audio audio) {
-        mVkApi.addAudio(Integer.parseInt(audio.getID()), Integer.parseInt(audio.getOwnerID()));
+        mVkApi.addAudio(audio.getID(), audio.getOwnerID());
     }
 
     public abstract void getAudio(int offset, int count);

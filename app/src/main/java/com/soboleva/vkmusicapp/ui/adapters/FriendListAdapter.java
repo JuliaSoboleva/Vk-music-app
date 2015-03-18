@@ -48,7 +48,8 @@ public class FriendListAdapter extends BaseAdapter {
 
 
     public void setFriendList(List<Friend> friendList) {
-        mFriendList = friendList;
+        mFriendList.clear();
+        mFriendList.addAll(friendList);
         notifyDataSetChanged();
     }
 

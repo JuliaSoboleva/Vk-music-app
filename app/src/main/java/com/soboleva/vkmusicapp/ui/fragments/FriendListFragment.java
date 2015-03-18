@@ -4,25 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
-import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.presenters.FriendPresenter;
+import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicapp.ui.adapters.FriendListAdapter;
 import timber.log.Timber;
 
 import java.util.List;
 
-public class FriendListFragment extends Fragment {
+public class FriendListFragment extends ListFragment {
 
-    private ListView mFriendListView;
     private FriendPresenter mFriendPresenter;
 
 
@@ -37,18 +33,14 @@ public class FriendListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mFriendPresenter = new FriendPresenter(this);
         mFriendPresenter.getMyFriends();
-        //mFriendPresenter = new
+
+        setListAdapter(new FriendListAdapter(getActivity()));
     }
 
-    // Inflate the view for the fragment based on layout XML
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        mFriendListView = (ListView) view.findViewById(R.id.friend_list);
-
-        mFriendListView.setAdapter(new FriendListAdapter(getActivity()));
-
-        mFriendListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 //noop
@@ -69,29 +61,26 @@ public class FriendListFragment extends Fragment {
             }
         });
 
-        mFriendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Friend friend = (Friend)mFriendListView.getAdapter().getItem(position);
+                Friend friend = (Friend) getListAdapter().getItem(position);
                 Intent intent = new Intent(getActivity(), FriendAudioActivity.class);
                 intent.putExtra(FriendAudioActivity.FRIEND, friend);
                 startActivity(intent);
             }
         });
-
-
-        return view;
     }
 
-
     public void showFriends(List<Friend> friendList) {
-        FriendListAdapter adapter = (FriendListAdapter) mFriendListView.getAdapter();
+        FriendListAdapter adapter = (FriendListAdapter) getListAdapter();
         adapter.setFriendList(friendList);
 
     }
 
     public void showWithAddedFriends(List<Friend> addedFriendList) {
-        ((FriendListAdapter) mFriendListView.getAdapter()).setAddedFriendList(addedFriendList);
+        ((FriendListAdapter) getListAdapter()).setAddedFriendList(addedFriendList);
 
     }
+
 }

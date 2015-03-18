@@ -2,14 +2,10 @@ package com.soboleva.vkmusicapp.application;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
-import com.vk.sdk.VKUIHelper;
 import timber.log.Timber;
 
 public class VkMusicApplication extends Application {
@@ -24,17 +20,7 @@ public class VkMusicApplication extends Application {
         Timber.plant(new Timber.DebugTree());
         mVkApi.initialize();
 
-        //mImageLoader.init(ImageLoaderConfiguration.createDefault(getApplicationContext())); // Проинициализировали конфигом по умолчанию
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-                .threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs() // Remove for release app
-                .build();
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config);
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
 
 
         registerActivityLifecycleCallbacks(new LifecycleCallbacks());
@@ -44,47 +30,45 @@ public class VkMusicApplication extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Timber.d("onActivityCreated -> VKUIHelper.onCreate");
-            VKUIHelper.onCreate(activity);
+            Timber.d("onActivityCreated  %s", activity.getLocalClassName());
+            VkApi.onCreate(activity);
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
+            Timber.d("onActivityStarted %s", activity.getLocalClassName());
 
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-            Timber.d("onActivityResumed -> VKUIHelper.onResume");
-            VKUIHelper.onResume(activity);
+            Timber.d("onActivityResumed %s", activity.getLocalClassName());
+            VkApi.onResume(activity);
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
+            Timber.d("onActivityPaused %s", activity.getLocalClassName());
 
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
+            Timber.d("onActivityStopped %s", activity.getLocalClassName());
 
         }
 
         @Override
         public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            Timber.d("onActivitySaveInstanceState %s", activity.getLocalClassName());
 
         }
 
         @Override
         public void onActivityDestroyed(Activity activity) {
-            VKUIHelper.onDestroy(activity);
-        }
+            Timber.d("onActivityDestroyed %s", activity.getLocalClassName());
 
-        public static void initImageLoader(Context context) {
-            // This configuration tuning is custom. You can tune every option, you may tune some of them,
-            // or you can create default configuration by
-            //  ImageLoaderConfiguration.createDefault(this);
-            // method.
-
+            VkApi.onDestroy(activity);
         }
 
     }

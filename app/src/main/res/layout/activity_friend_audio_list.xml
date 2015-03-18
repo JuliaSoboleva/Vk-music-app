@@ -49,11 +49,11 @@
                 />
     </LinearLayout>
 
-    <ListView
-            android:id="@+id/list_friend_audio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            android:divider="@null"
-            />
+    <FrameLayout android:id="@+id/friend_audio_container"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/header"
+
+    />
+
 </RelativeLayout>

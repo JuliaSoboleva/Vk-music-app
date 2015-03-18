@@ -24,8 +24,6 @@ public class VkApi {
     private Gson mGson = new Gson();
 
     private AuthListener mAuthListener;
-    private OnAudioListDownloadedListener mOnAudioListDownloadedListener;
-    private OnFriendListDownloadedListener mOnFriendListDownloadedListener;
 
     private static final String[] sMyScope = new String[]{
             VKScope.FRIENDS,
@@ -93,55 +91,6 @@ public class VkApi {
         }
     };
 
-    private VKRequest.VKRequestListener mAudioRequestListener = new VKRequest.VKRequestListener() {
-        @Override
-        public void onComplete(VKResponse response) {
-            AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
-            mOnAudioListDownloadedListener.onAudioListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
-                    audioResponseModel.getAudioResponse().getTotalCount());
-        }
-
-        @Override
-        public void onError(VKError error) {
-            //mResponseText.setText(error.toString());
-        }
-
-        @Override
-        public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-            // you can show progress of the request if you want
-        }
-
-        @Override
-        public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-            //mResponseText.append(String.format("Attempt %d/%d failed\n", attemptNumber, totalAttempts));
-        }
-    };
-
-    private VKRequest.VKRequestListener mFriendRequestListener = new VKRequest.VKRequestListener() {
-        @Override
-        public void onComplete(VKResponse response) {
-            FriendResponseModel friendResponseModel = mGson.fromJson(response.responseString, FriendResponseModel.class);
-            mOnFriendListDownloadedListener.onFriendListDownloaded(friendResponseModel.getFriendResponse().getFriendList(),
-                    friendResponseModel.getFriendResponse().getTotalCount());
-        }
-
-        @Override
-        public void onError(VKError error) {
-            //mResponseText.setText(error.toString());
-        }
-
-        @Override
-        public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-            // you can show progress of the request if you want
-        }
-
-        @Override
-        public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-            //mResponseText.append(String.format("Attempt %d/%d failed\n", attemptNumber, totalAttempts));
-        }
-    };
-
-
     public void initialize() {
         Timber.d("VkApi.initialize()");
         VKSdk.initialize(mAuthorizationListener, API_ID);
@@ -157,19 +106,41 @@ public class VkApi {
         VKSdk.authorize(sMyScope, true, true);
     }
 
-    public void getMyAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count) {
-        mOnAudioListDownloadedListener = onAudioListDownloadedListener;
+    public void getMyAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count) {
         VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, count,
                 VKApiConst.OFFSET, offset));
-        request.executeWithListener(mAudioRequestListener);
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
+                onAudioListDownloadedListener.onAudioListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
+                        audioResponseModel.getAudioResponse().getTotalCount());
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+            }
+        });
     }
 
-    public void getSearchedAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, String searchRequest, int offset, int count) {
-        mOnAudioListDownloadedListener = onAudioListDownloadedListener;
+    public void getSearchedAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, String searchRequest, int offset, int count) {
         Timber.d("searching audio %s", searchRequest);
         VKRequest request = new VKRequest("audio.search", VKParameters.from(VKApiConst.Q, searchRequest, VKApiConst.SORT, 2,
                 VKApiConst.COUNT, count, VKApiConst.OFFSET, offset));
-        request.executeWithListener(mAudioRequestListener);
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
+                onAudioListDownloadedListener.onAudioListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
+                        audioResponseModel.getAudioResponse().getTotalCount());
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+            }
+        });
     }
 
     public boolean isLoggedIn() {
@@ -180,24 +151,58 @@ public class VkApi {
         VKUIHelper.onActivityResult(activity, requestCode, resultCode, data);
     }
 
-    public void getFriends(OnFriendListDownloadedListener onFriendListDownloadedListener, int offset, int count) {
-        mOnFriendListDownloadedListener = onFriendListDownloadedListener;
+    public void getFriends(final OnFriendListDownloadedListener onFriendListDownloadedListener, int offset, int count) {
         VKRequest request = new VKRequest("friends.get", VKParameters.from(VKApiConst.COUNT, count,
                 VKApiConst.OFFSET, offset, VKApiConst.FIELDS, "photo_100", "order", "hints"));
-        request.executeWithListener(mFriendRequestListener);
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                FriendResponseModel friendResponseModel = mGson.fromJson(response.responseString, FriendResponseModel.class);
+                onFriendListDownloadedListener.onFriendListDownloaded(friendResponseModel.getFriendResponse().getFriendList(),
+                        friendResponseModel.getFriendResponse().getTotalCount());
+            }
+
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+            }
+        });
     }
 
-    public void addAudio(int audioID, int ownerID) {
+    public void addAudio(String audioID, String ownerID) {
         VKRequest request = new VKRequest("audio.add", VKParameters.from(VKApiConst.OWNER_ID, ownerID, "audio_id", audioID));
         //todo check it
         request.executeWithListener(null);
     }
 
-    public void getAudio(OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count, int friendID) {
-        mOnAudioListDownloadedListener = onAudioListDownloadedListener;
+    public void getAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count, String friendID) {
         VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, count,
                 VKApiConst.OFFSET, offset, VKApiConst.OWNER_ID, friendID));
-        request.executeWithListener(mAudioRequestListener);
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                AudioResponseModel audioResponseModel = mGson.fromJson(response.responseString, AudioResponseModel.class);
+                onAudioListDownloadedListener.onAudioListDownloaded(audioResponseModel.getAudioResponse().getAudioList(),
+                        audioResponseModel.getAudioResponse().getTotalCount());
+            }
 
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+            }
+        });
+
+    }
+
+    public static void onCreate(Activity activity) {
+        VKUIHelper.onCreate(activity);
+    }
+
+    public static void onResume(Activity activity) {
+        VKUIHelper.onResume(activity);
+    }
+
+    public static void onDestroy(Activity activity) {
+        VKUIHelper.onDestroy(activity);
     }
 }

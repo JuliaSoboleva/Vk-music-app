@@ -1,82 +1,60 @@
 package com.soboleva.vkmusicapp.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.soboleva.vkmusicapp.AudioIntentService;
 import com.soboleva.vkmusicapp.R;
-import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
-import com.soboleva.vkmusicapp.presenters.FriendAudioActivityPresenter;
-import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
-import timber.log.Timber;
-
-import java.util.List;
+import com.soboleva.vkmusicapp.ui.fragments.FriendAudioListFragment;
 
 public class FriendAudioActivity extends ActionBarActivity {
 
-    private ListView mAudioListView;
+//    private ListView mAudioListView;
     private ImageView mImageView;
     private TextView mTextView;
     private Toolbar mToolbar;
-    private FriendAudioActivityPresenter mPresenter;
     public static final String FRIEND = "friend";
+    private FragmentManager mFragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_audio_list);
 
-        mAudioListView = (ListView)findViewById(R.id.list_friend_audio);
+        setupUI();
+    }
+
+    private void setupUI() {
         mImageView = (ImageView)findViewById(R.id.image_profile_photo);
         mTextView = (TextView)findViewById(R.id.text_profile_name);
-
-        mAudioListView.setAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
-            @Override
-            public void onClick(Audio audio) {
-                Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
-                Intent i = new Intent(FriendAudioActivity.this, AudioIntentService.class);
-                i.putExtra(AudioIntentService.URL, audio.getURL());
-                i.putExtra(AudioIntentService.TITLE, audio.getTitle());
-                i.putExtra(AudioIntentService.ARTIST, audio.getArtist());
-                startService(i);
-            }
-        }));
 
         Friend friend = (Friend)getIntent().getSerializableExtra(FRIEND);
         ImageLoader.getInstance().displayImage(friend.getPhoto100(), mImageView);
         mTextView.setText(friend.getFirstName() + " " + friend.getLastName());
 
-        mPresenter = new FriendAudioActivityPresenter(this, friend);
-        mPresenter.getAudio();
-
         mToolbar = (Toolbar)findViewById(R.id.toolbar_friend_audio_activity);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-
-    }
-
-    public void showAudio(List<Audio> audioList) {
-        AudioListAdapter adapter = (AudioListAdapter) mAudioListView.getAdapter();
-        adapter.setAudioList(audioList);
-        adapter.notifyDataSetChanged();
+        setupFriendAudioListFragment(friend);
 
     }
 
-    public void showWithAddedAudio(List<Audio> addedAudioList) {
-        AudioListAdapter adapter = (AudioListAdapter) mAudioListView.getAdapter();
-        adapter.setAddedAudioList(addedAudioList);
-        adapter.notifyDataSetChanged();
+    private void setupFriendAudioListFragment(Friend friend) {
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        final Fragment friendAudioListFragment = FriendAudioListFragment.instantiate(this, friend);
 
-
+        fragmentTransaction.add(R.id.friend_audio_container, friendAudioListFragment);
+        fragmentTransaction.commit();
     }
+
+
+
 }
