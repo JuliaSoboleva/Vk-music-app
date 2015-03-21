@@ -36,32 +36,33 @@ public class MainActivity extends Activity {
     private void setupUI() {
         mAuthorizeButton = (Button) findViewById(R.id.authorize);
         logoutButton = (Button) findViewById(R.id.logout);
-        mAuthorizeButton.setOnClickListener(authorizeClick);
-        logoutButton.setOnClickListener(logoutClick);
         mMyAudioButton = (Button) findViewById(R.id.audio);
-        mMyAudioButton.setOnClickListener(audioClick);
+
+        mAuthorizeButton.setOnClickListener(menuClick);
+        logoutButton.setOnClickListener(menuClick);
+        mMyAudioButton.setOnClickListener(menuClick);
     }
 
-    private View.OnClickListener audioClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startAudioActivity();
-        }
-    };
 
-    private View.OnClickListener authorizeClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Timber.d("Auth button click");
-            mMainPresenter.authorize();
-        }
-    };
 
-    private View.OnClickListener logoutClick = new View.OnClickListener() {
+    private View.OnClickListener menuClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mMainPresenter.logout();
-            showButtons();
+            switch (v.getId()) {
+                case R.id.authorize:
+                    Timber.d("Auth button click");
+                    mMainPresenter.authorize();
+                    break;
+                case R.id.logout:
+                    mMainPresenter.logout();
+                    showButtons();
+                    break;
+                case R.id.audio:
+                    startAudioActivity();
+                    break;
+                default:
+                    return;
+            }
         }
     };
 

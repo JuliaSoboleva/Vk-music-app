@@ -18,15 +18,7 @@ public class FriendPresenter extends BaseListPresenter {
         mVkApi.getFriends(new OnFriendListDownloadedListener() {
             @Override
             public void onFriendListDownloaded(List<Friend> friends, int totalCount) {
-                mAvailableItemCount += friends.size();
-                Timber.d("mAvailableFriendCount = %d, mTotalFriendCount = %d", mAvailableItemCount, mTotalItemCount);
-                if (offset == 0) {
-                    mBaseListFragment.showItems(friends);
-                    mTotalItemCount = totalCount;
-                } else {
-                    mBaseListFragment.showWithAddedItems(friends);
-                }
-                mIsDownloadingNow = false;
+                showItems(offset, friends, totalCount);
             }
 
             @Override

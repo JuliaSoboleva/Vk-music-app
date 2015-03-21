@@ -3,8 +3,7 @@ package com.soboleva.vkmusicapp.application;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.soboleva.vkmusicapp.ImageLoaderWrapper;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import timber.log.Timber;
 
@@ -20,8 +19,7 @@ public class VkMusicApplication extends Application {
         Timber.plant(new Timber.DebugTree());
         mVkApi.initialize();
 
-        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(getApplicationContext()));
-
+        ImageLoaderWrapper.getInstance().init(getApplicationContext());
 
         registerActivityLifecycleCallbacks(new LifecycleCallbacks());
     }

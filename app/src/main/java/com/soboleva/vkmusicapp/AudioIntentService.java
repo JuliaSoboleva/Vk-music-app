@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import org.apache.http.util.ByteArrayBuffer;
 import timber.log.Timber;
 
 import java.io.BufferedInputStream;
@@ -33,7 +32,8 @@ public class AudioIntentService extends IntentService {
 
     private final int id = 1;
     private int mFileSize = 0;
-    private ByteArrayBuffer baf;
+    private int mDownloadedSize;
+    //private ByteArrayBuffer baf;
 
     public AudioIntentService() {
         super("AudioIntentService");
@@ -57,8 +57,7 @@ public class AudioIntentService extends IntentService {
         String artist = intent.getExtras().getString(AudioIntentService.ARTIST);
         String title = intent.getExtras().getString(AudioIntentService.TITLE);
 
-        title = title.replace("\\", "").replace("/", "");
-        String filename = title + ".mp3";
+        String filename = getPureFileTitle(title);
 
         File tmp = new File(cacheDir.getPath() + File.separator + filename);
         Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
@@ -78,22 +77,23 @@ public class AudioIntentService extends IntentService {
             Timber.d("file size in bytes %d", mFileSize);
 
             BufferedInputStream bis = new BufferedInputStream(is);
-            baf = new ByteArrayBuffer(50);
+            FileOutputStream fos = new FileOutputStream(tmp);
 
             notifyProgress(false, title);
 
-            int current = 0;
-            while ((current = bis.read()) != -1) {
-                baf.append((byte) current);
+            byte[] buffer = new byte[1024]; // Adjust if you want
+            int bytesRead;
+            mDownloadedSize = 0;
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+                mDownloadedSize += bytesRead;
+                Timber.d("mDownloadedSize = %d, fileSize = %d", mDownloadedSize, mFileSize);
             }
-            FileOutputStream fos = new FileOutputStream(tmp);
-            fos.write(baf.toByteArray());
             fos.close();
             is.close();
 
             // add new file to your media library
-            //todo why 4?
-            ContentValues values = new ContentValues(4);
+            ContentValues values = new ContentValues(7);
             long cur = System.currentTimeMillis();
             values.put(MediaStore.Audio.Media.TITLE, title);
             values.put(MediaStore.Audio.Media.ARTIST, artist);
@@ -130,8 +130,8 @@ public class AudioIntentService extends IntentService {
                     @Override
                     public void run() {
                         if (!finished) {
-                            while (baf.length() < mFileSize) {
-                                mBuilder.setProgress(mFileSize, baf.length(), false);
+                            while (mDownloadedSize < mFileSize){
+                                mBuilder.setProgress(mFileSize, mDownloadedSize, false);
                                 mNotifyManager.notify(id, mBuilder.build());
                                 try {
                                     Thread.sleep(50);
@@ -158,5 +158,10 @@ public class AudioIntentService extends IntentService {
         Timber.d("duration == %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(duration),
                 TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
         return duration;
+    }
+
+    private String getPureFileTitle(String oldTitle) {
+        String newTitle = oldTitle.replace("\\", "").replace("/", "")+".mp3";
+        return newTitle;
     }
 }

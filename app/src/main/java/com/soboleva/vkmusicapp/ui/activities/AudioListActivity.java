@@ -3,8 +3,6 @@ package com.soboleva.vkmusicapp.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -25,7 +23,6 @@ public class AudioListActivity extends ActionBarActivity {
     private SearchView mSearchView;
 
     private AudioActivityPresenter mAudioActivityPresenter;
-    private FragmentManager mFragmentManager;
 
 
 
@@ -56,7 +53,7 @@ public class AudioListActivity extends ActionBarActivity {
                 //todo или обновление поиска!
                 //todo не работает отмена
                 Fragment searchAudioListFragment = SearchAudioListFragment.newInstance(AudioListActivity.this, s);
-                mFragmentManager.beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.fragment_container, searchAudioListFragment)
                 .commit();
@@ -75,7 +72,7 @@ public class AudioListActivity extends ActionBarActivity {
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mFragmentManager.popBackStack();
+                getSupportFragmentManager().popBackStack();
                 return false;
             }
         });
@@ -101,14 +98,9 @@ public class AudioListActivity extends ActionBarActivity {
         Menu mMenu = mToolbar.getMenu();
         ActionBar actionBar = getSupportActionBar();
 
-        // получаем экземпляр FragmentTransaction
-        mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        // добавляем фрагмент
-        ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
-        fragmentTransaction.add(R.id.fragment_container, viewPagerFragment);
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new ViewPagerFragment())
+                .commit();
     }
 
 }

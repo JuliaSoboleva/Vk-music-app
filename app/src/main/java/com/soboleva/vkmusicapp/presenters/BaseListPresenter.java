@@ -1,7 +1,10 @@
 package com.soboleva.vkmusicapp.presenters;
 
 import com.soboleva.vkmusicapp.api.vk.VkApi;
+import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
+
+import java.util.List;
 
 public abstract class BaseListPresenter {
 
@@ -17,9 +20,6 @@ public abstract class BaseListPresenter {
     public BaseListPresenter(BaseListFragment baseListFragment) {
         mBaseListFragment = baseListFragment;
         mVkApi = VkApi.getInstance();
-        mTotalItemCount = 0;
-        mAvailableItemCount = 0;
-        mIsDownloadingNow = false;
     }
 
     public void getItems() {
@@ -40,5 +40,16 @@ public abstract class BaseListPresenter {
 
     public boolean isDownloadingNow() {
         return mIsDownloadingNow;
+    }
+
+    protected void showItems(int offset, List<? extends BaseData> data, int totalCount) {
+        mAvailableItemCount += data.size();
+        if (offset == 0) {
+            mBaseListFragment.showItems(data);
+            mTotalItemCount = totalCount;
+        } else {
+            mBaseListFragment.showWithAddedItems(data);
+        }
+        mIsDownloadingNow = false;
     }
 }

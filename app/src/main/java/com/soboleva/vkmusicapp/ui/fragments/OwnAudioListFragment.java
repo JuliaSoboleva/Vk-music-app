@@ -9,7 +9,7 @@ import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 
 public class OwnAudioListFragment extends AudioListFragment {
 
-    // newInstance constructor for creating fragment with arguments
+    // instantiate constructor for creating fragment with arguments
     public static Fragment instantiate(Context context) {
         return Fragment.instantiate(context, OwnAudioListFragment.class.getName());
     }

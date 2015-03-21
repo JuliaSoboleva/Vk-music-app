@@ -23,15 +23,7 @@ public class FriendAudioPresenter extends AudioPresenter {
         mVkApi.getAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
-                mAvailableItemCount += audios.size();
-                Timber.d("mAvailableAudioCount = %d, mTotalAudioCount = %d", mAvailableItemCount, mTotalItemCount);
-                if (offset == 0) {
-                    mBaseListFragment.showItems(audios);
-                    mTotalItemCount = totalCount;
-                } else {
-                    mBaseListFragment.showWithAddedItems(audios);
-                }
-                mIsDownloadingNow = false;
+                showItems(offset, audios, totalCount);
             }
 
             @Override

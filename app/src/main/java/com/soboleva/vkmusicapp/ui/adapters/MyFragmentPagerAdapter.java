@@ -21,13 +21,13 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        //return PageFragment.newInstance(position)
+        //return PageFragment.instantiate(position)
         mCurrentPosition = position;
         switch (position) {
             case 0:
                 return OwnAudioListFragment.instantiate(mContext);
             case 1:
-                return FriendListFragment.newInstance(mContext);
+                return FriendListFragment.instantiate(mContext);
             default:
                 return null;
         }

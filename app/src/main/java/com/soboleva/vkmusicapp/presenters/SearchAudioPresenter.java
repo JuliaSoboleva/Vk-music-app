@@ -22,15 +22,7 @@ public class SearchAudioPresenter extends AudioPresenter {
         mVkApi.getSearchedAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
-                mAvailableItemCount += audios.size();
-                if (offset == 0) {
-                    mBaseListFragment.showItems(audios);
-                    mTotalItemCount = totalCount;
-
-                } else {
-                    mBaseListFragment.showWithAddedItems(audios);
-                }
-                mIsDownloadingNow = false;
+                showItems(offset, audios, totalCount);
             }
 
             @Override
