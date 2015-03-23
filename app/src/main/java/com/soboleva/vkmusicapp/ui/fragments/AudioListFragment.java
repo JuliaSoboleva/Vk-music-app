@@ -27,9 +27,9 @@ public class AudioListFragment extends BaseListFragment {
     public void downloadAudio(Audio audio) {
         Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
         Intent i = new Intent(getActivity().getApplicationContext(), AudioIntentService.class);
-        i.putExtra(AudioIntentService.URL, audio.getURL());
-        i.putExtra(AudioIntentService.TITLE, audio.getTitle());
-        i.putExtra(AudioIntentService.ARTIST, audio.getArtist());
+        i.putExtra(AudioIntentService.PARAM_URL, audio.getURL());
+        i.putExtra(AudioIntentService.PARAM_TITLE, audio.getTitle());
+        i.putExtra(AudioIntentService.PARAM_ARTIST, audio.getArtist());
         getActivity().getApplicationContext().startService(i);
     }
 

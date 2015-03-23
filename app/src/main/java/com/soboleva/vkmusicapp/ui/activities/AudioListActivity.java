@@ -49,9 +49,6 @@ public class AudioListActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Timber.d("WTF,onQueryTextSubmit,  %s", s);
-                //todo замена фрагмента с viewPager-ом на фрагмент с результаами поиска
-                //todo или обновление поиска!
-                //todo не работает отмена
                 Fragment searchAudioListFragment = SearchAudioListFragment.newInstance(AudioListActivity.this, s);
                 getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)

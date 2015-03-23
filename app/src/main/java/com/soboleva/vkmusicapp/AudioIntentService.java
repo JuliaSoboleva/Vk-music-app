@@ -10,32 +10,41 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import com.soboleva.vkmusicapp.utils.FileDownloader;
+import com.soboleva.vkmusicapp.utils.PathHelper;
 import timber.log.Timber;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Intent.ACTION_MEDIA_SCANNER_SCAN_FILE;
+import static android.provider.MediaStore.Audio.AudioColumns.*;
 import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+import static android.provider.MediaStore.MediaColumns.DATA;
+import static android.provider.MediaStore.MediaColumns.DATE_ADDED;
+import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
+import static android.provider.MediaStore.MediaColumns.TITLE;
 
 public class AudioIntentService extends IntentService {
+    public static final String PARAM_URL = "url";
+    public static final String PARAM_ARTIST = "artist";
+    public static final String PARAM_TITLE = "title";
 
-    public static final String URL = "url";
-    public static final String ARTIST = "artist";
-    public static final String TITLE = "title";
-    private File cacheDir;
-    private NotificationManager mNotifyManager;
+    private static final int NOTIFICATION_ID = 1;
 
-    private final int id = 1;
-    private int mFileSize = 0;
+    private File mMusicDirectory;
+
+    FileDownloader mFileDownloader = new FileDownloader(buildFileDownloaderCallback());
+
+    private int mFullSize;
     private int mDownloadedSize;
+
+    private String mCurrentArtist;
+    private String mCurrentTitle;
+    private String mAudioName;
 
     public AudioIntentService() {
         super("AudioIntentService");
@@ -43,126 +52,139 @@ public class AudioIntentService extends IntentService {
 
     public void onCreate() {
         super.onCreate();
-        cacheDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-        Timber.d("tmpLocation = %s", cacheDir.getAbsolutePath());
-        if (!cacheDir.exists()) {
-            Timber.d("was not needed dir");
-            cacheDir.mkdirs();
-            Timber.d("trying to mkdirs == %b", cacheDir.mkdirs());
-        }
 
-        //todo is external storage available?
+        initMusicDirectory();
+    }
+
+    private FileDownloader.Callback buildFileDownloaderCallback() {
+        return new FileDownloader.Callback() {
+            @Override
+            public void onPartDownloaded(int downloadedSize, File file) {
+                mDownloadedSize = downloadedSize;
+
+                if (mDownloadedSize == mFullSize) {
+                    onAudioDownloaded(file);
+                }
+            }
+
+            @Override
+            public void onSizeReceived(int fullSize) {
+                mFullSize = fullSize;
+
+                Timber.d("on size received = %d", mFullSize);
+
+                startProgressNotification();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        };
+    }
+
+    private void onAudioDownloaded(File file) {
+        ContentValues values = new ContentValues(7);
+
+        values.put(TITLE, mCurrentTitle);
+        values.put(ARTIST, mCurrentArtist);
+        values.put(IS_MUSIC, true);
+        values.put(DATE_ADDED, (int) (System.currentTimeMillis() / 1000));
+        values.put(MIME_TYPE, "audio/3gpp");
+        values.put(DATA, file.getAbsolutePath());
+        values.put(DURATION, getDuration(file));
+
+        ContentResolver contentResolver = getContentResolver();
+
+        //получение преобразователя содержимого
+        Uri newUri = contentResolver.insert(EXTERNAL_CONTENT_URI, values);
+
+        // Notifiy the media application on the device
+        sendBroadcast(new Intent(ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+    }
+
+    private void initMusicDirectory() { // todo is external storage available?
+        mMusicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
+        if (!mMusicDirectory.exists()) {
+
+            boolean isCreated = mMusicDirectory.mkdirs();
+            Timber.d("is music directory created = %b", isCreated);
+        }
     }
 
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
-        String remoteUrl = extras.getString(URL);
-        String artist = extras.getString(ARTIST);
-        String title = extras.getString(TITLE);
 
-        String filename = getPureFileTitle(title);
+        String remoteUrl = extras.getString(PARAM_URL);
+        mCurrentArtist = extras.getString(PARAM_ARTIST);
+        mCurrentTitle = extras.getString(PARAM_TITLE);
 
-        File tmp = new File(cacheDir.getPath(), filename);
-        Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
-        if (tmp.exists()) { // todo
-            notifyProgress(true, title);
-            stopSelf();
-            return;
+        String desiredFilename = PathHelper.buildMp3FileName(mCurrentArtist, mCurrentTitle);
+
+        File file = new File(mMusicDirectory, desiredFilename);
+        int counter = 0;
+        while (file.exists()) {
+            counter+=1;
+            Timber.d("counter = %d", counter);
+            file = new File(mMusicDirectory,PathHelper.incrementFileName(mCurrentArtist, mCurrentTitle, counter));
         }
-        try {
-            URL url = new URL(remoteUrl);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            if (httpCon.getResponseCode() != 200)
-                throw new Exception("Failed to connect"); // todo
-            InputStream is = httpCon.getInputStream();
+        mAudioName = desiredFilename;
 
-            mFileSize = httpCon.getContentLength();
-            Timber.d("file size in bytes %d", mFileSize);
-
-            BufferedInputStream bis = new BufferedInputStream(is);
-            FileOutputStream fos = new FileOutputStream(tmp);
-
-            notifyProgress(false, title);
-
-            byte[] buffer = new byte[1024]; // Adjust if you want
-            int bytesRead;
-            mDownloadedSize = 0;
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                fos.write(buffer, 0, bytesRead);
-                mDownloadedSize += bytesRead;
-                Timber.d("mDownloadedSize = %d, fileSize = %d", mDownloadedSize, mFileSize);
-            }
-            fos.close();
-            is.close();
-
-            // add new file to your media library
-            ContentValues values = new ContentValues(7);
-            long cur = System.currentTimeMillis();
-            values.put(MediaStore.Audio.Media.TITLE, title);
-            values.put(MediaStore.Audio.Media.ARTIST, artist);
-            values.put(MediaStore.Audio.Media.IS_MUSIC, true);
-            values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (cur / 1000));
-            values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
-            values.put(MediaStore.Audio.Media.DATA, tmp.getAbsolutePath());
-            values.put(MediaStore.Audio.Media.DURATION, getDuration(tmp));
-            ContentResolver contentResolver = getContentResolver();
-
-            //получение преобразователя содержимого
-            Uri newUri = contentResolver.insert(EXTERNAL_CONTENT_URI, values);
-
-            // Notifiy the media application on the device
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
-
-        } catch (Exception e) {
-            Log.e("Service", "Failed!", e);
-        }
-
+        mFileDownloader.download(remoteUrl,file);
     }
 
-    private void notifyProgress(final boolean finished, final String title) {
+    private void startProgressNotification() {
 
-        mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationManager notificationManager = (NotificationManager)
+                getSystemService(Context.NOTIFICATION_SERVICE);
+
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle(title)
-                .setContentText("Downloading...")
+
+        mBuilder.setContentTitle(mAudioName)
+                .setContentText("Downloading...") // todo
                 .setSmallIcon(R.drawable.ic_launcher);
 
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!finished) {
-                            while (mDownloadedSize < mFileSize){
-                                mBuilder.setProgress(mFileSize, mDownloadedSize, false);
-                                mNotifyManager.notify(id, mBuilder.build());
-                                try {
-                                    Thread.sleep(50);
-                                } catch (InterruptedException e) {
-                                    Timber.d("sleep failure");
-                                }
-                            }
-                        }
-                        // When the loop is finished, updates the notification
-                        mBuilder.setContentText("Download complete") // todo
-                                // Removes the progress bar
-                                .setProgress(0, 0, false);
-                        mNotifyManager.notify(id, mBuilder.build());
-                    }
+        HandlerThread handlerThread = new HandlerThread("NotificationThread");
+        handlerThread.start();
+
+        final Handler handler = new Handler(handlerThread.getLooper());
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mDownloadedSize != mFullSize) {
+
+                    Timber.d("notify about full size %d and downloaded size %d", mFullSize, mDownloadedSize);
+
+                    mBuilder.setProgress(mFullSize, mDownloadedSize, false);
+                    notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+                    handler.postDelayed(this, 300);
+                } else {
+
+                    mBuilder.setContentText("Download complete") // todo
+                            .setProgress(0, 0, false);
+
+                    notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+                    handler.removeCallbacks(this);
                 }
-// Starts the thread by calling the run() method in its Runnable
-        ).start();
+            }
+        });
     }
 
     private int getDuration(File file) {
-        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), Uri.parse(file.getAbsolutePath()));
-        int duration = mp.getDuration();
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.parse(file.getAbsolutePath()));
+        int duration = mediaPlayer.getDuration();
 
-        Timber.d("duration == %d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(duration),
-                TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        mediaPlayer.release();
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(minutes);
+
+        Timber.d("duration == %d min, %d sec", minutes, seconds);
+
         return duration;
-    }
-
-    private String getPureFileTitle(String oldTitle) {
-        return oldTitle.replace("\\", "").replace("/", "")+".mp3";
     }
 }
