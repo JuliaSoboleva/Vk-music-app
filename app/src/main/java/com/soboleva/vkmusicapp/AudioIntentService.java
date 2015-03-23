@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
@@ -22,6 +23,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import static android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
 public class AudioIntentService extends IntentService {
 
     public static final String URL = "url";
@@ -33,7 +36,6 @@ public class AudioIntentService extends IntentService {
     private final int id = 1;
     private int mFileSize = 0;
     private int mDownloadedSize;
-    //private ByteArrayBuffer baf;
 
     public AudioIntentService() {
         super("AudioIntentService");
@@ -53,15 +55,16 @@ public class AudioIntentService extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent) {
-        String remoteUrl = intent.getExtras().getString(AudioIntentService.URL);
-        String artist = intent.getExtras().getString(AudioIntentService.ARTIST);
-        String title = intent.getExtras().getString(AudioIntentService.TITLE);
+        Bundle extras = intent.getExtras();
+        String remoteUrl = extras.getString(URL);
+        String artist = extras.getString(ARTIST);
+        String title = extras.getString(TITLE);
 
         String filename = getPureFileTitle(title);
 
-        File tmp = new File(cacheDir.getPath() + File.separator + filename);
+        File tmp = new File(cacheDir.getPath(), filename);
         Timber.d("trying to write %s", cacheDir.getPath() + File.separator + filename);
-        if (tmp.exists()) {
+        if (tmp.exists()) { // todo
             notifyProgress(true, title);
             stopSelf();
             return;
@@ -70,7 +73,7 @@ public class AudioIntentService extends IntentService {
             URL url = new URL(remoteUrl);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             if (httpCon.getResponseCode() != 200)
-                throw new Exception("Failed to connect");
+                throw new Exception("Failed to connect"); // todo
             InputStream is = httpCon.getInputStream();
 
             mFileSize = httpCon.getContentLength();
@@ -105,8 +108,7 @@ public class AudioIntentService extends IntentService {
             ContentResolver contentResolver = getContentResolver();
 
             //получение преобразователя содержимого
-            Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            Uri newUri = contentResolver.insert(base, values);
+            Uri newUri = contentResolver.insert(EXTERNAL_CONTENT_URI, values);
 
             // Notifiy the media application on the device
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
@@ -141,7 +143,7 @@ public class AudioIntentService extends IntentService {
                             }
                         }
                         // When the loop is finished, updates the notification
-                        mBuilder.setContentText("Download complete")
+                        mBuilder.setContentText("Download complete") // todo
                                 // Removes the progress bar
                                 .setProgress(0, 0, false);
                         mNotifyManager.notify(id, mBuilder.build());
@@ -161,7 +163,6 @@ public class AudioIntentService extends IntentService {
     }
 
     private String getPureFileTitle(String oldTitle) {
-        String newTitle = oldTitle.replace("\\", "").replace("/", "")+".mp3";
-        return newTitle;
+        return oldTitle.replace("\\", "").replace("/", "")+".mp3";
     }
 }
