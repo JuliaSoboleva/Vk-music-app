@@ -2,6 +2,7 @@ package com.soboleva.vkmusicapp;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,6 +46,8 @@ public class AudioIntentService extends IntentService {
     private String mCurrentArtist;
     private String mCurrentTitle;
     private String mAudioName;
+
+    private File mFile;
 
     public AudioIntentService() {
         super("AudioIntentService");
@@ -122,16 +125,17 @@ public class AudioIntentService extends IntentService {
 
         String desiredFilename = PathHelper.buildMp3FileName(mCurrentArtist, mCurrentTitle);
 
-        File file = new File(mMusicDirectory, desiredFilename);
+        /*File*/
+        mFile = new File(mMusicDirectory, desiredFilename);
         int counter = 0;
-        while (file.exists()) {
-            counter+=1;
+        while (mFile.exists()) {
+            counter += 1;
             Timber.d("counter = %d", counter);
-            file = new File(mMusicDirectory,PathHelper.incrementFileName(mCurrentArtist, mCurrentTitle, counter));
+            mFile = new File(mMusicDirectory, PathHelper.incrementFileName(mCurrentArtist, mCurrentTitle, counter));
         }
         mAudioName = desiredFilename;
 
-        mFileDownloader.download(remoteUrl,file);
+        mFileDownloader.download(remoteUrl, mFile);
     }
 
     private void startProgressNotification() {
@@ -143,7 +147,9 @@ public class AudioIntentService extends IntentService {
 
         mBuilder.setContentTitle(mAudioName)
                 .setContentText("Downloading...") // todo
-                .setSmallIcon(R.drawable.ic_launcher);
+                .setSmallIcon(R.drawable.ic_note)
+                //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_note))
+                .setOngoing(true);
 
         HandlerThread handlerThread = new HandlerThread("NotificationThread");
         handlerThread.start();
@@ -166,12 +172,24 @@ public class AudioIntentService extends IntentService {
                     mBuilder.setContentText("Download complete") // todo
                             .setProgress(0, 0, false);
 
+                    setNotificationOnClick(mBuilder);
+
                     notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
                     handler.removeCallbacks(this);
                 }
             }
         });
+    }
+
+    private void setNotificationOnClick(NotificationCompat.Builder builder) {
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(mFile), "audio/*");
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        builder.setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOngoing(false);
     }
 
     private int getDuration(File file) {

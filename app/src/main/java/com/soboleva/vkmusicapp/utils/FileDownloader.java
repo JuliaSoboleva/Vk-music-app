@@ -29,8 +29,6 @@ public class FileDownloader {
 
         resetFields();
 
-
-
         try {
             URL url = new URL(remoteUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
