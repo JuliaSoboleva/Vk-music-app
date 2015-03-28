@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +113,12 @@ public class AudioListAdapter extends BaseAdapter {
         holder.mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Timber.d("onClick for downloading button");
                 mDownloadButtonClickListener.onClick(audio);
             }
         });
+        holder.mSaveButton.setEnabled(!audio.isDownloading());
+
         if (mAddAble) {
             holder.mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,7 +129,18 @@ public class AudioListAdapter extends BaseAdapter {
         }
 
 
+
         return convertView;
+    }
+
+    public void changeAudioStates(String audioID, boolean state){
+        for (Audio audio : mAudioList) {
+            if (audio.getID().equals(audioID)) {
+                Timber.d("нужный id, change to %b", state);
+                audio.setDownloading(state);
+            }
+        }
+        this.notifyDataSetChanged();
     }
 
 

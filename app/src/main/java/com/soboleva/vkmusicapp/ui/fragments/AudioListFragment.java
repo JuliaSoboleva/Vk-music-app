@@ -30,6 +30,7 @@ public class AudioListFragment extends BaseListFragment {
         i.putExtra(AudioIntentService.PARAM_URL, audio.getURL());
         i.putExtra(AudioIntentService.PARAM_TITLE, audio.getTitle());
         i.putExtra(AudioIntentService.PARAM_ARTIST, audio.getArtist());
+        i.putExtra(AudioIntentService.PARAM_AUDIO_ID, audio.getID());
         getActivity().getApplicationContext().startService(i);
     }
 
@@ -53,4 +54,5 @@ public class AudioListFragment extends BaseListFragment {
         adapter.setAddedAudioList((List<Audio>)dataList);
         adapter.notifyDataSetChanged();
     }
+
 }

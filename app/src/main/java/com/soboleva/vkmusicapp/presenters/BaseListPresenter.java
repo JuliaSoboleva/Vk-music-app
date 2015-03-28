@@ -52,4 +52,8 @@ public abstract class BaseListPresenter {
         }
         mIsDownloadingNow = false;
     }
+
+    public BaseListFragment getBaseListFragment() {
+        return mBaseListFragment;
+    }
 }

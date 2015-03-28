@@ -2,7 +2,10 @@ package com.soboleva.vkmusicapp.presenters;
 
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
+import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
+import com.soboleva.vkmusicapp.utils.MessageEvent;
+import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 import java.util.List;
@@ -12,6 +15,7 @@ public class OwnAudioPresenter extends AudioPresenter{
 
     public OwnAudioPresenter(BaseListFragment fragment) {
         super(fragment);
+        EventBus.getDefault().register(this);
     }
 
 
@@ -34,6 +38,12 @@ public class OwnAudioPresenter extends AudioPresenter{
 
     }
 
+    public void onEventMainThread(MessageEvent event){
+        Timber.d("onEvent ownAudioPresenter works");
+        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
+        adapter.changeAudioStates(event.getAudioID(), event.isDownloading());
+
+    }
 
 }
 

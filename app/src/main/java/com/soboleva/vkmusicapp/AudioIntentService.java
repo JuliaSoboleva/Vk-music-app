@@ -15,7 +15,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.NotificationCompat;
 import com.soboleva.vkmusicapp.utils.FileDownloader;
+import com.soboleva.vkmusicapp.utils.MessageEvent;
 import com.soboleva.vkmusicapp.utils.PathHelper;
+import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 import java.io.File;
@@ -33,6 +35,7 @@ public class AudioIntentService extends IntentService {
     public static final String PARAM_URL = "url";
     public static final String PARAM_ARTIST = "artist";
     public static final String PARAM_TITLE = "title";
+    public static final String PARAM_AUDIO_ID = "audioID";
 
     private static final int NOTIFICATION_ID = 1;
 
@@ -46,6 +49,7 @@ public class AudioIntentService extends IntentService {
     private String mCurrentArtist;
     private String mCurrentTitle;
     private String mAudioName;
+    private String mAudioID;
 
     private File mFile;
 
@@ -104,6 +108,9 @@ public class AudioIntentService extends IntentService {
 
         // Notifiy the media application on the device
         sendBroadcast(new Intent(ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+
+        EventBus.getDefault().post(new MessageEvent(mAudioID, false));
+
     }
 
     private void initMusicDirectory() { // todo is external storage available?
@@ -122,6 +129,10 @@ public class AudioIntentService extends IntentService {
         String remoteUrl = extras.getString(PARAM_URL);
         mCurrentArtist = extras.getString(PARAM_ARTIST);
         mCurrentTitle = extras.getString(PARAM_TITLE);
+        mAudioID = extras.getString(PARAM_AUDIO_ID);
+
+        EventBus.getDefault().post(new MessageEvent(mAudioID, true));
+
 
         String desiredFilename = PathHelper.buildMp3FileName(mCurrentArtist, mCurrentTitle);
 

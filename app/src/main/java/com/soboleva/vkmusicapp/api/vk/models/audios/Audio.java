@@ -26,6 +26,8 @@ public class Audio extends BaseData {
     @SerializedName("lyrics_id")
     private String mLyricsID;
 
+    private boolean mIsDownloading;
+
 //    идентификатор жанра
 //    @SerializedName("genre_id")
 //    private String mGenreID;
@@ -75,5 +77,13 @@ public class Audio extends BaseData {
                 ", mURL='" + mURL + '\'' +
                 ", mLyricsID='" + mLyricsID + '\'' +
                 '}';
+    }
+
+    public boolean isDownloading() {
+        return mIsDownloading;
+    }
+
+    public void setDownloading(boolean isDownloading) {
+        mIsDownloading = isDownloading;
     }
 }

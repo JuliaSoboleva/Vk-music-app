@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.OwnAudioPresenter;
 import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
+import timber.log.Timber;
 
 public class OwnAudioListFragment extends AudioListFragment {
 
@@ -24,6 +25,7 @@ public class OwnAudioListFragment extends AudioListFragment {
         setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
             @Override
             public void onClick(Audio audio) {
+                Timber.d("on click OwnAudioListFragment");
                 downloadAudio(audio);
             }
         }));
