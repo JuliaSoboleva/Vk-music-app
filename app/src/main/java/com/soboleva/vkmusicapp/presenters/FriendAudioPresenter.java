@@ -3,6 +3,7 @@ package com.soboleva.vkmusicapp.presenters;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
+import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
 import timber.log.Timber;
 
@@ -23,13 +24,20 @@ public class FriendAudioPresenter extends AudioPresenter {
         mVkApi.getAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
-                showItems(offset, audios, totalCount);
+                Timber.d("Friend's audios: totalCount = %d ", totalCount);
+                if(totalCount == 0) {
+                    Timber.d("Friend has not audios");
+                    ((AudioListFragment)mBaseListFragment).showEmpty();
+                } else {
+                    showItems(offset, audios, totalCount);
+                }
             }
 
             @Override
             public void onError() {
                 Timber.d("getMyAudio Error");
                 mIsDownloadingNow = false;
+                ((AudioListFragment)mBaseListFragment).showEmpty();
             }
         }, offset, count, mFriend.getID());
 

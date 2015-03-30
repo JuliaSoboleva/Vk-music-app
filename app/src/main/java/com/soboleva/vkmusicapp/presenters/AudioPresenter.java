@@ -1,7 +1,10 @@
 package com.soboleva.vkmusicapp.presenters;
 
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
+import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
+import com.soboleva.vkmusicapp.utils.MessageEvent;
+import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 public abstract class AudioPresenter extends BaseListPresenter {
@@ -9,7 +12,7 @@ public abstract class AudioPresenter extends BaseListPresenter {
 
     protected AudioPresenter(BaseListFragment baseListFragment) {
         super(baseListFragment);
-        //EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     public void addAudio(Audio audio) {
@@ -17,11 +20,11 @@ public abstract class AudioPresenter extends BaseListPresenter {
         mVkApi.addAudio(audio.getID(), audio.getOwnerID());
     }
 
-//    public void onEvent(MessageEvent event){
-//        Timber.d("onEvent works");
-//        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
-//        adapter.changeAudioStates(event.getAudioID(), event.isDownloading());
-//    }
+    public void onEventMainThread(MessageEvent event){
+        Timber.d("onEventMainThread works");
+        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
+        adapter.changeAudioStates(event.getAudioID(), event.isDownloading());
+    }
 
 
 

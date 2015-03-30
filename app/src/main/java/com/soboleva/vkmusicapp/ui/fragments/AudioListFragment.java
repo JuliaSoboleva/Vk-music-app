@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import com.soboleva.vkmusicapp.AudioIntentService;
+import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
@@ -18,6 +20,7 @@ public class AudioListFragment extends BaseListFragment {
     public static Fragment instantiate(Context context) {
         return Fragment.instantiate(context, AudioListFragment.class.getName());
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,12 @@ public class AudioListFragment extends BaseListFragment {
         AudioListAdapter adapter = (AudioListAdapter)getListAdapter();
         adapter.setAddedAudioList((List<Audio>)dataList);
         adapter.notifyDataSetChanged();
+    }
+
+    public void showEmpty(){
+        View empty = getActivity().getLayoutInflater().inflate(R.layout.view_empty_audiolist, getListView(), false);
+        getActivity().addContentView(empty, getListView().getLayoutParams());
+        getListView().setEmptyView(empty);
     }
 
 }

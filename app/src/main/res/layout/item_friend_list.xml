@@ -18,15 +18,7 @@
             app:border_color="@color/colorPrimaryLight"
             tools:src="@drawable/ic_launcher"
             />
-    <!---->
-    <!--<ImageView-->
-            <!--android:id="@+id/image_friend_photo"-->
-            <!--android:layout_width="@dimen/icon_large"-->
-            <!--android:layout_height="@dimen/icon_large"-->
-            <!--android:layout_marginRight="@dimen/margin_normal"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--tools:src="@drawable/ic_launcher"-->
-            <!--/>-->
+
 
     <TextView
             android:id="@+id/text_friend_name"

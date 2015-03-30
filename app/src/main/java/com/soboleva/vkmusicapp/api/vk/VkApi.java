@@ -189,6 +189,7 @@ public class VkApi {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                onAudioListDownloadedListener.onError();
             }
         });
 

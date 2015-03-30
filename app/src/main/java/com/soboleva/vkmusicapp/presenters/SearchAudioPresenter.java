@@ -2,6 +2,7 @@ package com.soboleva.vkmusicapp.presenters;
 
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
+import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.SearchAudioListFragment;
 import timber.log.Timber;
 
@@ -22,7 +23,11 @@ public class SearchAudioPresenter extends AudioPresenter {
         mVkApi.getSearchedAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
-                showItems(offset, audios, totalCount);
+                if (totalCount == 0) {
+                    ((AudioListFragment) mBaseListFragment).showEmpty();
+                } else {
+                    showItems(offset, audios, totalCount);
+                }
             }
 
             @Override
