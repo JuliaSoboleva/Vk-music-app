@@ -30,10 +30,10 @@
         <activity android:name=".ui.activities.FriendAudioActivity"
                   android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support API level 7+ -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.soboleva.vkmusicapp.ui.activities.AudioListActivity"/>
-            />
+            <!--<meta-data-->
+                    <!--android:name="android.support.PARENT_ACTIVITY"-->
+                    <!--android:value="com.soboleva.vkmusicapp.ui.activities.AudioListActivity"/>-->
+            <!--/>-->
         </activity>
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
