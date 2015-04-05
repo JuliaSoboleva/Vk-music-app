@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.astuetz.PagerSlidingTabStrip;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.ui.adapters.MyFragmentPagerAdapter;
 import timber.log.Timber;
@@ -13,6 +14,7 @@ import timber.log.Timber;
 public class ViewPagerFragment extends Fragment {
 
     private ViewPager mPager;
+    private PagerSlidingTabStrip mTabs;
     private MyFragmentPagerAdapter mPagerAdapter;
 
     private int mCurrentFragmentIndex;
@@ -30,6 +32,13 @@ public class ViewPagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
         mPager = (ViewPager) view.findViewById(R.id.pager);
         setupPagerAdapter();
+
+        // Bind the tabs to the ViewPager
+        mTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
+        mTabs.setViewPager(mPager);
+
+        setupOnPageChangeListener();
+
         return view;
     }
 
@@ -42,11 +51,12 @@ public class ViewPagerFragment extends Fragment {
         mPagerAdapter = new MyFragmentPagerAdapter(/*getActivity().getSupportFragmentManager()*/getChildFragmentManager(), getActivity());
         mPager.setAdapter(mPagerAdapter);
 
-        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    }
 
+    private void setupOnPageChangeListener() {
+        mTabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                //Log.d(TAG, "onPageSelected, position = " + position);
                 mCurrentFragmentIndex = position;
                 Timber.d("onPageSelected, position = %d", position);
             }

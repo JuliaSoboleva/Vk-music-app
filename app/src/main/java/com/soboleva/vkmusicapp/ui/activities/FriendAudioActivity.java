@@ -46,7 +46,6 @@ public class FriendAudioActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // API 5+ solution
                 onBackPressed();
                 return true;
             default:
