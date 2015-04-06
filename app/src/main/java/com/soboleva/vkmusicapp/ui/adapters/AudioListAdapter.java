@@ -126,14 +126,15 @@ public class AudioListAdapter extends BaseAdapter {
                     mOnAddButtonClickListener.onClick(audio);
                 }
             });
-        }
 
+            holder.mAddButton.setEnabled(!audio.isAdded());
+        }
 
 
         return convertView;
     }
 
-    public void changeAudioStates(String audioID, boolean state){
+    public void changeAudioStates(String audioID, boolean state) {
         for (Audio audio : mAudioList) {
             if (audio.getID().equals(audioID)) {
                 Timber.d("нужный id, change to %b", state);

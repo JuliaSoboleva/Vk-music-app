@@ -36,6 +36,7 @@ public class SearchAudioListFragment extends AudioListFragment {
             @Override
             public void onClick(Audio audio) {
                 addAudio(audio);
+                audio.setAdded(true);
             }
         }) );
 

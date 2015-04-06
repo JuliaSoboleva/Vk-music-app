@@ -14,11 +14,15 @@
             android:background="@color/colorPrimary"
 
 
-            android:textColor = "#80FFFFFF"
+            android:textColor = "@color/colorPrimaryLight"
             app:pstsTextColorSelected = "@color/colorText"
 
+            app:pstsUnderlineColor = "@color/colorPrimaryDark"
+            app:pstsUnderlineHeight = "1dp"
+
             app:pstsShouldExpand="true"
-            app:pstsIndicatorColor ="@color/colorPrimaryLight"
+            app:pstsIndicatorColor ="@color/colorText"
+            app:pstsIndicatorHeight = "4dp"
 
 
 

@@ -19,6 +19,7 @@ public abstract class BaseListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getListView().setDivider(null);
         setScrollListener();
     }
 

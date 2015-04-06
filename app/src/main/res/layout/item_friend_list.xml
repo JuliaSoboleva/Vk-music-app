@@ -15,7 +15,7 @@
             android:layout_marginRight="@dimen/margin_normal"
             android:scaleType="centerCrop"
             app:border_width="2dp"
-            app:border_color="@color/colorPrimaryLight"
+            app:border_color="@color/colorText"
             tools:src="@drawable/ic_launcher"
             />
 

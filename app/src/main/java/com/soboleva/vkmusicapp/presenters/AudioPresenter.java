@@ -18,6 +18,8 @@ public abstract class AudioPresenter extends BaseListPresenter {
     public void addAudio(Audio audio) {
         Timber.d("Adding audio %s", audio.getTitle());
         mVkApi.addAudio(audio.getID(), audio.getOwnerID());
+        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
+        adapter.notifyDataSetChanged();
     }
 
     public void onEventMainThread(MessageEvent event){
