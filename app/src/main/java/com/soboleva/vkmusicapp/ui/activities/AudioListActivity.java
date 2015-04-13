@@ -22,8 +22,9 @@ public class AudioListActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private SearchView mSearchView;
 
-    private AudioActivityPresenter mAudioActivityPresenter;
+    //private boolean mIsEmtyNow;
 
+    private AudioActivityPresenter mAudioActivityPresenter;
 
 
     @Override
@@ -37,7 +38,6 @@ public class AudioListActivity extends ActionBarActivity {
     }
 
 
-
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
@@ -49,11 +49,12 @@ public class AudioListActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Timber.d("WTF,onQueryTextSubmit,  %s", s);
-                Fragment searchAudioListFragment = SearchAudioListFragment.newInstance(AudioListActivity.this, s);
+                Fragment searchAudioListFragment = SearchAudioListFragment.instanceOf(AudioListActivity.this, s);
                 getSupportFragmentManager().beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fragment_container, searchAudioListFragment)
-                .commit();
+                        .addToBackStack(null)
+                        .replace(R.id.fragment_container, searchAudioListFragment)
+                        .commit();
+                //mIsEmtyNow = false;
 
                 return false;
 
@@ -75,7 +76,6 @@ public class AudioListActivity extends ActionBarActivity {
         });
 
 
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -87,7 +87,7 @@ public class AudioListActivity extends ActionBarActivity {
 
     private void setupUI() {
 
-        mToolbar = (Toolbar)findViewById(R.id.toolbar_audio_activity);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_audio_activity);
         mToolbar.inflateMenu(R.menu.main_menu);
 
         setSupportActionBar(mToolbar);
@@ -98,7 +98,28 @@ public class AudioListActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new ViewPagerFragment())
                 .commit();
+
+        /*if (mIsEmtyNow) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ViewPagerFragment())
+                    .commit();
+            mIsEmtyNow = false;
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new ViewPagerFragment())
+                    .commit();
+            mIsEmtyNow = false;
+        }*/
     }
+
+   /* public void showEmpty(int state) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, EmptyListFragment.instantiate(this, state))
+                .commit();
+        mIsEmtyNow = true;
+
+    }*/
+
 
 }
 

@@ -53,7 +53,7 @@ public class FileDownloader {
             inputStream.close();
         } catch (IOException e) {
             Timber.e("something went wrong: %s", e.getMessage());
-
+            mCallback.onError();
             e.printStackTrace();
         }
     }

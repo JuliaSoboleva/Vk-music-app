@@ -17,7 +17,8 @@ public class VkApi {
 
     //Этот ID предназначен только для примера. Пожалуйста замение его ID своего приложения.
     //private static String API_ID = "2904017";
-    private static String API_ID = "3974615";
+    //private static String API_ID = "3974615";
+    private static String API_ID = "4869131";
 
     private static VkApi sInstance;
 
@@ -27,7 +28,7 @@ public class VkApi {
 
     private static final String[] sMyScope = new String[]{
             VKScope.FRIENDS,
-            VKScope.WALL,
+//            VKScope.WALL,
             VKScope.PHOTOS,
             VKScope.NOHTTPS,
             VKScope.AUDIO
@@ -65,7 +66,7 @@ public class VkApi {
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
             Timber.d("VkSdkListener onTokenExpired");
-            VKSdk.authorize(sMyScope);
+            VKSdk.authorize(sMyScope, true, false);
         }
 
         @Override
@@ -103,7 +104,7 @@ public class VkApi {
     public void authorize(AuthListener authListener) {
         Timber.d("VkApi.authorize(AuthListener)");
         mAuthListener = authListener;
-        VKSdk.authorize(sMyScope, true, true);
+        VKSdk.authorize(sMyScope, true, false);
     }
 
     public void getMyAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count) {
@@ -120,6 +121,7 @@ public class VkApi {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                onAudioListDownloadedListener.onError();
             }
         });
     }
@@ -139,6 +141,7 @@ public class VkApi {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                onAudioListDownloadedListener.onError();
             }
         });
     }
@@ -165,6 +168,7 @@ public class VkApi {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                onFriendListDownloadedListener.onError();
             }
         });
     }

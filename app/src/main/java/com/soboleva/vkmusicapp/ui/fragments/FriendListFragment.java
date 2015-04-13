@@ -17,7 +17,7 @@ import java.util.List;
 public class FriendListFragment extends BaseListFragment {
 
 
-    // instantiate constructor for creating fragment with arguments
+    // instanceOf constructor for creating fragment with arguments
     public static Fragment instantiate(Context context) {
         return Fragment.instantiate(context, FriendListFragment.class.getName());
     }

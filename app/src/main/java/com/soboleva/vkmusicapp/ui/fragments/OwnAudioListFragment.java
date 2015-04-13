@@ -10,7 +10,7 @@ import timber.log.Timber;
 
 public class OwnAudioListFragment extends AudioListFragment {
 
-    // instantiate constructor for creating fragment with arguments
+    // instanceOf constructor for creating fragment with arguments
     public static Fragment instantiate(Context context) {
         return Fragment.instantiate(context, OwnAudioListFragment.class.getName());
     }
@@ -30,10 +30,7 @@ public class OwnAudioListFragment extends AudioListFragment {
             }
         }));
 
-        //setScrollListener();
     }
-
-
 
 
 }

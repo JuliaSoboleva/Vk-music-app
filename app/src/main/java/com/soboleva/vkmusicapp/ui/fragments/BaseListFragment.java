@@ -13,6 +13,11 @@ import java.util.List;
 
 public abstract class BaseListFragment extends ListFragment {
 
+    public static String STATE_KEY = "state";
+    public static final int STATE_NO_AUDIO = 0;
+    public static final int STATE_NO_INTERNET = 1;
+    public static final int STATE_ERROR = 2;
+
     protected BaseListPresenter mBaseListPresenter;
 
 
@@ -21,6 +26,9 @@ public abstract class BaseListFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
         setScrollListener();
+
+
+
     }
 
     private void setScrollListener() {

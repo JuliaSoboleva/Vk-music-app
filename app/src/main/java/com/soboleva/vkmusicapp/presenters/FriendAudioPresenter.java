@@ -27,7 +27,7 @@ public class FriendAudioPresenter extends AudioPresenter {
                 Timber.d("Friend's audios: totalCount = %d ", totalCount);
                 if(totalCount == 0) {
                     Timber.d("Friend has not audios");
-                    ((AudioListFragment)mBaseListFragment).showEmpty();
+                    ((AudioListFragment)mBaseListFragment).showMessage(BaseListFragment.STATE_NO_AUDIO);
                 } else {
                     showItems(offset, audios, totalCount);
                 }
@@ -37,7 +37,7 @@ public class FriendAudioPresenter extends AudioPresenter {
             public void onError() {
                 Timber.d("getMyAudio Error");
                 mIsDownloadingNow = false;
-                ((AudioListFragment)mBaseListFragment).showEmpty();
+                ((AudioListFragment)mBaseListFragment).showMessage(BaseListFragment.STATE_ERROR);
             }
         }, offset, count, mFriend.getID());
 

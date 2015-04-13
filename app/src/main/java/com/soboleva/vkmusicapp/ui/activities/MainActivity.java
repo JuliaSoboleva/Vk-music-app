@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.presenters.MainPresenter;
+import com.vk.sdk.util.VKUtil;
 import timber.log.Timber;
 
 public class MainActivity extends Activity {
@@ -26,6 +27,9 @@ public class MainActivity extends Activity {
 
         setupUI();
         showButtons();
+
+        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+        Timber.d("fingerprints = %s", fingerprints);
     }
 
     @Override

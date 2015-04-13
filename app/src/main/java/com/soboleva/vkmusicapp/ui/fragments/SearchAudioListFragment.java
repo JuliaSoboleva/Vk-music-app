@@ -11,8 +11,8 @@ public class SearchAudioListFragment extends AudioListFragment {
 
     public static String REQUEST_KEY = "request";
 
-    // instantiate constructor for creating fragment with arguments
-    public static Fragment newInstance(Context context, String request) {
+    // instanceOf constructor for creating fragment with arguments
+    public static Fragment instanceOf(Context context, String request) {
         Bundle bundle = new Bundle();
         bundle.putString(REQUEST_KEY, request);
         return Fragment.instantiate(context, SearchAudioListFragment.class.getName(), bundle);

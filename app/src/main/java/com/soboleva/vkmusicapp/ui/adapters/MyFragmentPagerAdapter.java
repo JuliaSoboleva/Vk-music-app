@@ -21,7 +21,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        //return PageFragment.instantiate(position)
+        //return PageFragment.instanceOf(position)
         mCurrentPosition = position;
         switch (position) {
             case 0:

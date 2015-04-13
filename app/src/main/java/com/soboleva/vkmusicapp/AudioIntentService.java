@@ -85,7 +85,11 @@ public class AudioIntentService extends IntentService {
 
             @Override
             public void onError() {
-
+                Timber.d("mCallback onError сейчас должен появиться toast");
+                //todo
+                /*Toast toast = Toast.makeText(getApplicationContext(),
+                        "Ошибочкка вышла", Toast.LENGTH_SHORT);
+                toast.show();*/
             }
         };
     }
@@ -158,7 +162,7 @@ public class AudioIntentService extends IntentService {
 
         mBuilder.setContentTitle(mAudioName)
                 .setContentText("Downloading...") // todo
-                .setSmallIcon(R.drawable.ic_note)
+                .setSmallIcon(R.drawable.ic_note_lightblue)
                 //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_note))
                 .setOngoing(true);
 

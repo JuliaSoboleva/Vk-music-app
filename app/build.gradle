@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
+
 }

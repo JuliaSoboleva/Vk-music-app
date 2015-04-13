@@ -70,6 +70,7 @@ public class AudioListAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView mTitle;
         TextView mArtist;
+        TextView mDuration;
         Button mSaveButton;
         Button mAddButton;
     }
@@ -93,6 +94,7 @@ public class AudioListAdapter extends BaseAdapter {
             holder.mTitle = (TextView) convertView.findViewById(R.id.text1);
             holder.mArtist = (TextView) convertView.findViewById(R.id.text2);
             holder.mSaveButton = (Button) convertView.findViewById(R.id.save);
+            holder.mDuration = (TextView) convertView.findViewById(R.id.text_duration);
             if (mAddAble) {
                 holder.mAddButton = (Button) convertView.findViewById(R.id.button_add);
                 holder.mAddButton.setVisibility(View.VISIBLE);
@@ -109,6 +111,19 @@ public class AudioListAdapter extends BaseAdapter {
 
         holder.mTitle.setText(audio.getTitle());
         holder.mArtist.setText(audio.getArtist());
+
+        int duration = Integer.parseInt(audio.getDuration());
+        int hours = duration / 3600;
+        int minutes = duration / 60 - 60*hours;
+        int seconds = duration % 60;
+        if (hours != 0) {
+            //more than hour
+            holder.mDuration.setText(String.format("%d:%02d:%02d", hours, minutes, seconds));
+
+        } else {
+            holder.mDuration.setText(String.format("%d:%02d", minutes, seconds));
+        }
+
         holder.mSaveButton.setTag(position);
         holder.mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override

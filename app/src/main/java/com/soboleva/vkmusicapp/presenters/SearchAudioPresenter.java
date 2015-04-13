@@ -3,6 +3,7 @@ package com.soboleva.vkmusicapp.presenters;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
+import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.SearchAudioListFragment;
 import timber.log.Timber;
 
@@ -24,7 +25,7 @@ public class SearchAudioPresenter extends AudioPresenter {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
                 if (totalCount == 0) {
-                    ((AudioListFragment) mBaseListFragment).showEmpty();
+                    ((AudioListFragment) mBaseListFragment).showMessage(BaseListFragment.STATE_NO_AUDIO);
                 } else {
                     showItems(offset, audios, totalCount);
                 }
@@ -34,11 +35,12 @@ public class SearchAudioPresenter extends AudioPresenter {
             public void onError() {
                 Timber.d("getSearchedAudio Error");
                 mIsDownloadingNow = false;
+                ((AudioListFragment) mBaseListFragment).showMessage(BaseListFragment.STATE_ERROR);
             }
         }, mSearchRequest, offset, count);
     }
 
-    public void setSearchRequest(String searchRequest) {
-        mSearchRequest = searchRequest;
-    }
+//    public void setSearchRequest(String searchRequest) {
+//        mSearchRequest = searchRequest;
+//    }
 }

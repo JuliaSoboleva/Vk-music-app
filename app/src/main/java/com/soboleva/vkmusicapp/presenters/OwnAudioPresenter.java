@@ -23,8 +23,9 @@ public class OwnAudioPresenter extends AudioPresenter {
         mVkApi.getMyAudio(new OnAudioListDownloadedListener() {
             @Override
             public void onAudioListDownloaded(List<Audio> audios, int totalCount) {
+                Timber.d("onAudioListDownloaded, totalCount = %d", totalCount);
                 if (totalCount == 0) {
-                    ((AudioListFragment) mBaseListFragment).showEmpty();
+                    ((AudioListFragment) mBaseListFragment).showMessage(BaseListFragment.STATE_NO_AUDIO);
                 } else {
                     showItems(offset, audios, totalCount);
                 }
@@ -34,6 +35,7 @@ public class OwnAudioPresenter extends AudioPresenter {
             public void onError() {
                 Timber.d("getMyAudio Error");
                 mIsDownloadingNow = false;
+                ((AudioListFragment) mBaseListFragment).showMessage(BaseListFragment.STATE_ERROR);
             }
         }, offset, count);
 
