@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
                         public void run() {
                             mMainPresenter.authorize();
                         }
-                    }, 400);
+                    }, 500);
 
 
                     break;
