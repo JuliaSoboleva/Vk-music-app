@@ -2,6 +2,7 @@ package com.soboleva.vkmusicapp.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -118,21 +119,25 @@ public class AudioListFragment extends BaseListFragment {
         mEmptyTextView.setVisibility(View.VISIBLE);
         switch (stateID) {
             case STATE_NO_AUDIO:
-                mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                mEmptyImageView.setImageResource(R.drawable.ic_owl_headphones);
                 mEmptyTextView.setText(R.string.no_audio);
                 break;
             case STATE_NO_INTERNET:
+                mEmptyImageView.setImageResource(R.drawable.ic_owl);
                 mEmptyTextView.setText(R.string.no_internet);
                 //todo
                 break;
             case STATE_ERROR:
-                mEmptyTextView.setText(R.string.error);
-                /*if (isNetworkAvailable()) {
-                    text.setText(R.string.error);
+                if (!isNetworkAvailable()) {
+                    mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                    mEmptyTextView.setText(R.string.no_internet);
                 }
                 else {
-                    text.setText(R.string.no_internet);
-                }*/
+                    mEmptyImageView.setImageResource(R.drawable.ic_pug);
+                    mEmptyTextView.setText(R.string.error);
+                }
+
+
                 //todo
                 break;
             default:
@@ -140,6 +145,11 @@ public class AudioListFragment extends BaseListFragment {
 
         }
 
+    }
+
+    private  boolean isNetworkAvailable() {
+        Context context = this.getActivity().getApplicationContext();
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
     }
 
 }

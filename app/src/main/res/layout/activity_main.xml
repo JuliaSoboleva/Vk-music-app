@@ -1,29 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary">
 
 
-    <Button
-        android:id="@+id/authorize"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Авторизация"
-        />
+    <ImageView android:id="@+id/start_logo"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:src="@drawable/ic_owl_headphones"
+               android:layout_centerInParent="true"
+            />
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Музыка ВКонтакте"
+              android:textSize="@dimen/font_larger"
+              android:textColor="@color/colorText"
+              android:gravity="center"
+              android:layout_above="@id/start_logo"
 
-    <Button
-            android:id="@+id/audio"
+            />
+    <com.andexert.library.RippleView
+            android:id="@+id/more"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="5dp"
+            rv_centered="true">
+
+        <Button
+                android:id="@+id/authorize"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="50dp"
+                android:text="@string/authorize"
+                android:textSize="@dimen/font_large"
+                android:textColor="@color/colorText"
+                />
+    </com.andexert.library.RippleView>
+
+    <!--    <Button
+                android:id="@+id/audio"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Мои аудиозаписи"
+                />
+
+        <Button
+            android:id="@+id/logout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Мои аудиозаписи"
-            />
+            android:text="Выход"
+            />-->
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Выход"
-        />
-
-</LinearLayout>
+</RelativeLayout>

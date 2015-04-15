@@ -3,6 +3,7 @@ package com.soboleva.vkmusicapp.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import com.soboleva.vkmusicapp.R;
@@ -13,8 +14,7 @@ import timber.log.Timber;
 public class MainActivity extends Activity {
 
     private Button mAuthorizeButton;
-    private Button logoutButton;
-    private Button mMyAudioButton;
+
 
     MainPresenter mMainPresenter;
 
@@ -39,12 +39,11 @@ public class MainActivity extends Activity {
 
     private void setupUI() {
         mAuthorizeButton = (Button) findViewById(R.id.authorize);
-        logoutButton = (Button) findViewById(R.id.logout);
-        mMyAudioButton = (Button) findViewById(R.id.audio);
+
 
         mAuthorizeButton.setOnClickListener(menuClick);
-        logoutButton.setOnClickListener(menuClick);
-        mMyAudioButton.setOnClickListener(menuClick);
+        //logoutButton.setOnClickListener(menuClick);
+        //mMyAudioButton.setOnClickListener(menuClick);
     }
 
 
@@ -55,15 +54,23 @@ public class MainActivity extends Activity {
             switch (v.getId()) {
                 case R.id.authorize:
                     Timber.d("Auth button click");
-                    mMainPresenter.authorize();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainPresenter.authorize();
+                        }
+                    }, 400);
+
+
                     break;
-                case R.id.logout:
-                    mMainPresenter.logout();
-                    showButtons();
-                    break;
-                case R.id.audio:
-                    startAudioActivity();
-                    break;
+//                case R.id.logout:
+//                    mMainPresenter.logout();
+//                    showButtons();
+//                    break;
+//                case R.id.audio:
+//                    startAudioActivity();
+//                    break;
                 default:
                     return;
             }
@@ -79,12 +86,12 @@ public class MainActivity extends Activity {
         if (mMainPresenter.isLoggedIn()) {
             mAuthorizeButton.setVisibility(View.GONE);
             //mAuthorizeButton.setVisibility(View.VISIBLE);
-            logoutButton.setVisibility(View.VISIBLE);
-            mMyAudioButton.setVisibility(View.VISIBLE);
+            //logoutButton.setVisibility(View.VISIBLE);
+            //mMyAudioButton.setVisibility(View.VISIBLE);
         } else {
             mAuthorizeButton.setVisibility(View.VISIBLE);
-            logoutButton.setVisibility(View.GONE);
-            mMyAudioButton.setVisibility(View.GONE);
+            //logoutButton.setVisibility(View.GONE);
+            //mMyAudioButton.setVisibility(View.GONE);
         }
     }
 

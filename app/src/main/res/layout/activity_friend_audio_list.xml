@@ -19,7 +19,8 @@
     <LinearLayout android:id="@+id/header"
                   android:layout_width="match_parent"
                   android:layout_height="120dp"
-                  android:background="@color/colorPrimary"
+                  android:background="@drawable/blue_polygon2"
+
                   android:layout_below="@id/toolbar_friend_audio_activity"
             >
         <de.hdodenhof.circleimageview.CircleImageView
