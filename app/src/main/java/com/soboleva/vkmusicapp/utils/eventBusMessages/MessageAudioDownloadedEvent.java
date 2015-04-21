@@ -1,11 +1,11 @@
-package com.soboleva.vkmusicapp.utils;
+package com.soboleva.vkmusicapp.utils.eventBusMessages;
 
-public class MessageEvent {
+public class MessageAudioDownloadedEvent {
     //public final String message;
     private final String mAudioID;
     private final boolean mIsDownloading;
 
-    public MessageEvent(String audioID, boolean isDownloading) {
+    public MessageAudioDownloadedEvent(String audioID, boolean isDownloading) {
         this.mAudioID = audioID;
         this.mIsDownloading = isDownloading;
     }

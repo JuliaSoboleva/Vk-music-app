@@ -29,5 +29,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile 'com.github.traex.rippleeffect:library:1.2.4'
-
+    //    compile 'mbanje.kurt:fabbutton:1.0.9'
+    compile project(':fabbutton')
 }

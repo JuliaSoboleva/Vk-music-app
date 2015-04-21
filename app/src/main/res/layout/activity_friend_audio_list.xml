@@ -20,8 +20,8 @@
                   android:layout_width="match_parent"
                   android:layout_height="120dp"
                   android:background="@drawable/blue_polygon2"
-
                   android:layout_below="@id/toolbar_friend_audio_activity"
+                  android:elevation="4dp"
             >
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_profile_photo"
@@ -54,6 +54,7 @@
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_below="@+id/header"
+                 android:foreground="@drawable/shadow_toolbar"
 
     />
 

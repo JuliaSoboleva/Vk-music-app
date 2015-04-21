@@ -55,11 +55,6 @@ public class AudioListFragment extends BaseListFragment {
         super.onViewCreated(view, savedInstanceState);
         Timber.d("onViewCreated");
 
-        Timber.d("setEmptyView(mEmptyView)");
-        /*Timber.d("isNetworkAvailable() = %b", isNetworkAvailable());
-        if (!isNetworkAvailable()) {
-            showEmpty(STATE_NO_INTERNET);
-        }*/
     }
 
     public void downloadAudio(Audio audio) {

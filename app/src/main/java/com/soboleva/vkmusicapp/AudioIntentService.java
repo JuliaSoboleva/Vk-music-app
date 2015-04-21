@@ -15,8 +15,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.NotificationCompat;
 import com.soboleva.vkmusicapp.utils.FileDownloader;
-import com.soboleva.vkmusicapp.utils.MessageEvent;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadedEvent;
 import com.soboleva.vkmusicapp.utils.PathHelper;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageDownloadingProgressEvent;
 import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
@@ -95,6 +96,8 @@ public class AudioIntentService extends IntentService {
     }
 
     private void onAudioDownloaded(File file) {
+        EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, 100));
+
         ContentValues values = new ContentValues(7);
 
         values.put(TITLE, mCurrentTitle);
@@ -113,7 +116,7 @@ public class AudioIntentService extends IntentService {
         // Notifiy the media application on the device
         sendBroadcast(new Intent(ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
 
-        EventBus.getDefault().post(new MessageEvent(mAudioID, false));
+        EventBus.getDefault().post(new MessageAudioDownloadedEvent(mAudioID, false));
 
     }
 
@@ -135,8 +138,8 @@ public class AudioIntentService extends IntentService {
         mCurrentTitle = extras.getString(PARAM_TITLE);
         mAudioID = extras.getString(PARAM_AUDIO_ID);
 
-        EventBus.getDefault().post(new MessageEvent(mAudioID, true));
-
+        EventBus.getDefault().post(new MessageAudioDownloadedEvent(mAudioID, true));
+        EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, 0));
 
         String desiredFilename = PathHelper.buildMp3FileName(mCurrentArtist, mCurrentTitle);
 
@@ -179,6 +182,9 @@ public class AudioIntentService extends IntentService {
                     Timber.d("notify about full size %d and downloaded size %d", mFullSize, mDownloadedSize);
 
                     mBuilder.setProgress(mFullSize, mDownloadedSize, false);
+                    Timber.d("progress posted = %d", (int)((float)mDownloadedSize/(float)mFullSize*100));
+                    EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, (int)((float)mDownloadedSize/(float)mFullSize*100)));
+
                     notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
                     handler.postDelayed(this, 300);
@@ -187,8 +193,9 @@ public class AudioIntentService extends IntentService {
                     mBuilder.setContentText("Download complete") // todo
                             .setProgress(0, 0, false);
 
-                    setNotificationOnClick(mBuilder);
 
+
+                    setNotificationOnClick(mBuilder);
                     notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
                     handler.removeCallbacks(this);

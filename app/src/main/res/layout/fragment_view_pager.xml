@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
 
@@ -12,30 +11,41 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:elevation="4dp"
 
 
-            android:textColor = "@color/colorPrimaryLight"
-            app:pstsTextColorSelected = "@color/colorText"
+            android:textColor="@color/colorPrimaryLight"
+            app:pstsTextColorSelected="@color/colorText"
 
-            app:pstsUnderlineColor = "@color/colorPrimaryDark"
-            app:pstsUnderlineHeight = "1dp"
+            app:pstsUnderlineColor="@color/colorPrimaryDark"
+            app:pstsUnderlineHeight="1dp"
 
             app:pstsShouldExpand="true"
-            app:pstsIndicatorColor ="@color/colorText"
-            app:pstsIndicatorHeight = "4dp"
-
+            app:pstsIndicatorColor="@color/colorText"
+            app:pstsIndicatorHeight="4dp"
 
 
             />
     <!--android:background="@color/colorPrimary"-->
     <!--app:pstsTextColorSelected = "@color/colorText"-->
 
-<android.support.v4.view.ViewPager
-android:id="@+id/pager"
-android:layout_width="match_parent"
-android:layout_height="wrap_content">
-</android.support.v4.view.ViewPager>
+    <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tabs"
+
+            >
+    </android.support.v4.view.ViewPager>
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_below="@id/tabs"
+                 android:foreground="@drawable/shadow_toolbar"
+            >
+
+            </FrameLayout>
 
 
-
-</LinearLayout>
+</RelativeLayout>

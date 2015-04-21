@@ -28,6 +28,11 @@ public class Audio extends BaseData {
 
     private boolean mIsDownloading;
     private boolean mIsAdded;
+    private int mDownloadingProgress;
+    private boolean mIsWaiting;
+
+    //private boolean mIsStateChanged;
+
 
 //    идентификатор жанра
 //    @SerializedName("genre_id")
@@ -86,6 +91,9 @@ public class Audio extends BaseData {
 
     public void setDownloading(boolean isDownloading) {
         mIsDownloading = isDownloading;
+        if(isDownloading) {
+            mIsWaiting = false;
+        }
     }
 
     public boolean isAdded() {
@@ -95,4 +103,22 @@ public class Audio extends BaseData {
     public void setAdded(boolean isAdded) {
         mIsAdded = isAdded;
     }
+
+    public int getDownloadingProgress() {
+        return mDownloadingProgress;
+    }
+
+    public void setDownloadingProgress(int downloadingProgress) {
+        mDownloadingProgress = downloadingProgress;
+    }
+
+    public boolean isWaiting() {
+        return mIsWaiting;
+    }
+
+    public void setWaiting(boolean isWaiting) {
+        mIsWaiting = isWaiting;
+    }
+
+
 }

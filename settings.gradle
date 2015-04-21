@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':fabbutton'
+project(':fabbutton').projectDir = new File('FabButton-master/FabButton-master/fabbutton')
