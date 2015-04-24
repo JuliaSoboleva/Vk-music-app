@@ -84,6 +84,17 @@ public class AudioListActivity extends ActionBarActivity {
         mAudioActivityPresenter.onActivityResult(this, requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                mAudioActivityPresenter.logOut();
+                startActivity(new Intent(AudioListActivity.this, MainActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void setupUI() {
 
@@ -98,6 +109,8 @@ public class AudioListActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new ViewPagerFragment())
                 .commit();
+
+
 
         /*if (mIsEmtyNow) {
             getSupportFragmentManager().beginTransaction()

@@ -4,4 +4,6 @@
     <string name="no_internet">Нет соединения...</string>
     <string name="error">Произошла ошибка</string>
     <string name="authorize">ВХОД</string>
+    <string name="logout">Logout</string>
+    <string name="search">Search</string>
 </resources>

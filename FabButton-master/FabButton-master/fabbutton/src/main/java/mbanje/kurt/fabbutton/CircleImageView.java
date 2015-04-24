@@ -231,13 +231,4 @@ public class CircleImageView extends ImageView {
         }
     }
 
-    public boolean getSome(){
-        //crossfader.reverseTransition(500);
-        TransitionDrawable td = (TransitionDrawable)crossfader.getCurrent();
-        td.resetTransition();
-        //Drawable tdok = getResources().getDrawable(R.drawable.ic_fab_complete);
-        return false;
-    }
-
-
 }

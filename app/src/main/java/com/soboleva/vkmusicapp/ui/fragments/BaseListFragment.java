@@ -42,7 +42,7 @@ public abstract class BaseListFragment extends ListFragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int total = mBaseListPresenter.getTotalItemCount();
                 int available = mBaseListPresenter.getAvailableItemCount();
-                if (firstVisibleItem + visibleItemCount >= totalItemCount - 1 && available < total && !mBaseListPresenter.isDownloadingNow()) {
+                if (firstVisibleItem + visibleItemCount >= totalItemCount - 5 && available < total && !mBaseListPresenter.isDownloadingNow()) {
                     if (total - available >= BaseListPresenter.PAGE_SIZE) {
                         mBaseListPresenter.getItems(available, AudioPresenter.PAGE_SIZE);
                     } else {

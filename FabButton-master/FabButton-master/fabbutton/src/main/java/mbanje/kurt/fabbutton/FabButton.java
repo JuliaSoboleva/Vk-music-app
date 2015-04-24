@@ -182,9 +182,6 @@ public class FabButton extends FrameLayout implements CircleImageView.OnFabViewL
         }
     }
 
-    public boolean getSome(){
-        return circle.getSome();
-    }
 
 
     public void setShowEndBitmap(boolean showEndBitmap) {

@@ -18,6 +18,11 @@ public class AudioActivityPresenter {
         mVkApi.onActivityResult(audioListActivity, requestCode, resultCode, data);
     }
 
+    public void logOut() {
+        mVkApi.logOut();
+        //todo starting activity
+    }
+
 
 
 }
