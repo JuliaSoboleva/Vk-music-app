@@ -31,16 +31,18 @@
                 />
         <activity android:name=".ui.activities.FriendAudioActivity"
                   android:screenOrientation="portrait">
-            <!-- Parent activity meta-data to support API level 7+ -->
-            <!--<meta-data-->
-                    <!--android:name="android.support.PARENT_ACTIVITY"-->
-                    <!--android:value="com.soboleva.vkmusicapp.ui.activities.AudioListActivity"/>-->
-            <!--/>-->
         </activity>
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
 
 
         <service android:name=".AudioIntentService"/>
+
+        <receiver android:name=".utils.WiFiConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

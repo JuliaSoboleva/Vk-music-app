@@ -58,6 +58,7 @@ public class CircleImageView extends ImageView {
     private float currentRingWidth;
     private float ringWidthRatio = 0.14f; //of a possible 1f;
     private BitmapDrawable drawables[] = new BitmapDrawable[2];
+    private int drawablesRes[] = new int[2];
     private TransitionDrawable crossfader;
 
     private int ringWidth;
@@ -131,6 +132,9 @@ public class CircleImageView extends ImageView {
      * @param resource the resource id of the icon
      */
     public void setIcon(int resource,int endBitmapResource){
+        drawablesRes[0] = resource;
+        drawablesRes[1] = endBitmapResource;
+
         Bitmap srcBitmap = BitmapFactory.decodeResource(getResources(),resource);
         if(showEndBitmap){
             Bitmap endBitmap = BitmapFactory.decodeResource(getResources(),endBitmapResource);
@@ -231,4 +235,7 @@ public class CircleImageView extends ImageView {
         }
     }
 
+    public int[] getDrawablesRes() {
+        return drawablesRes;
+    }
 }

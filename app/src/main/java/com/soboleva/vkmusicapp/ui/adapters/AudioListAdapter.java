@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioWaitingEvent;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageInterruptDownloadingEvent;
 import de.greenrobot.event.EventBus;
 import mbanje.kurt.fabbutton.FabButton;
 import timber.log.Timber;
@@ -103,7 +104,6 @@ public class AudioListAdapter extends BaseAdapter {
 
             holder.mTitle = (TextView) convertView.findViewById(R.id.text1);
             holder.mArtist = (TextView) convertView.findViewById(R.id.text2);
-            //holder.mSaveButton = (Button) convertView.findViewById(R.id.save);
             holder.mDuration = (TextView) convertView.findViewById(R.id.text_duration);
 
             holder.mFabButton = (FabButton) convertView.findViewById(R.id.determinate);
@@ -144,25 +144,25 @@ public class AudioListAdapter extends BaseAdapter {
         holder.mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Timber.d("onClick for downloading button");
 
-                EventBus.getDefault().post(new MessageAudioWaitingEvent(audio.getID(), true));
-                //changeAudioStates(audio.getID(), STATE_WAITING, true);
-                //audio.setWaiting(true);
-                mDownloadButtonClickListener.onClick(audio);
+                if (!audio.isDownloading() && !audio.isWaiting()) {
+                    Timber.d("onClick for downloading button");
+                    EventBus.getDefault().post(new MessageAudioWaitingEvent(audio.getID(), true));
+                    mDownloadButtonClickListener.onClick(audio);
+                } else if (audio.isDownloading()) {
+                    Timber.d("onClick for interrupting downloading");
+                    EventBus.getDefault().post(new MessageInterruptDownloadingEvent(audio.getID()));
+                    audio.setDownloading(false);
+                    changeProgress(audio.getID(), 0);
+                } else { //audio is waiting
+                    Timber.d("onClick for interrupting waiting audio");
+                    EventBus.getDefault().post(new MessageInterruptDownloadingEvent(audio.getID()));
+                    audio.setWaiting(false);
+                }
             }
         });
-        holder.mFabButton.setEnabled(!(audio.isDownloading() || audio.isWaiting()));
 
-        holder.mFabButton.setProgress(audio.getDownloadingProgress());
-
-
-
-
-        if (audio.isWaiting() != holder.mFabButton.isIndeterminate()) {
-            holder.mFabButton.showProgress(true);
-            holder.mFabButton.setIndeterminate(audio.isWaiting());
-        }
+        checkFabButtonState(holder.mFabButton, audio);
 
 
         if (mAddAble) {
@@ -176,12 +176,7 @@ public class AudioListAdapter extends BaseAdapter {
             holder.mAddButton.setEnabled(!audio.isAdded());
         }
 
-        if (audio.getDownloadingProgress() == 0 && holder.mFabButton.isShowEndBitmap()) {
-            //holder.mFabButton.resetIcon();
-            holder.mFabButton.setShowEndBitmap(false);
-        } else if (audio.getDownloadingProgress() == 100 && !holder.mFabButton.isShowEndBitmap()) {
-            holder.mFabButton.setShowEndBitmap(true);
-        }
+
 
 
         return convertView;
@@ -194,8 +189,6 @@ public class AudioListAdapter extends BaseAdapter {
                     if (audio.getID().equals(audioID)) {
                         Timber.d("нужный id, change to %b", state);
                         audio.setDownloading(value);
-                        //audio.setWaiting(false);
-
                     }
                 }
                 break;
@@ -227,5 +220,46 @@ public class AudioListAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
 
+    private void checkFabButtonState(FabButton fabButton, Audio audio) {
+
+        fabButton.setProgress(audio.getDownloadingProgress());
+
+
+        if (audio.getDownloadingProgress() != 100) {
+            if (audio.isWaiting() || audio.isDownloading()) {
+                if (fabButton.getDrawablesRes()[0] != R.drawable.ic_cancel ||
+                        fabButton.getDrawablesRes()[1] != R.drawable.ic_fab_complete) {
+                    fabButton.setIcon(R.drawable.ic_cancel, R.drawable.ic_fab_complete);
+                    Timber.d("FabButton sets cancelable");
+                }
+
+            } else { //normal state
+                if (fabButton.getDrawablesRes()[0] != R.drawable.ic_downloading ||
+                        fabButton.getDrawablesRes()[1] != R.drawable.ic_fab_complete) {
+                    fabButton.setIcon(R.drawable.ic_downloading, R.drawable.ic_fab_complete);
+                    Timber.d("FabButton sets normal");
+                }
+            }
+        }
+
+        if (audio.isWaiting() != fabButton.isIndeterminate()) {
+            fabButton.showProgress(audio.isWaiting() || audio.isDownloading());
+            fabButton.setIndeterminate(audio.isWaiting());
+        }
+
+        //if audio is downloaded -> show end bitmap
+        //else no
+        if((audio.getDownloadingProgress() == 100) != fabButton.isShowEndBitmap()) {
+           fabButton.setShowEndBitmap(audio.getDownloadingProgress() == 100);
+            if (fabButton.isShowEndBitmap()) {
+                fabButton.setIcon(R.drawable.ic_fab_complete, R.drawable.ic_fab_complete);
+            }
+        }
+
+    }
 }

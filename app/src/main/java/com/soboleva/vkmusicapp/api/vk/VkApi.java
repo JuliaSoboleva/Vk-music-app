@@ -15,9 +15,6 @@ import timber.log.Timber;
 
 public class VkApi {
 
-    //Этот ID предназначен только для примера. Пожалуйста замение его ID своего приложения.
-    //private static String API_ID = "2904017";
-    //private static String API_ID = "3974615";
     private static String API_ID = "4869131";
 
     private static VkApi sInstance;
@@ -104,6 +101,7 @@ public class VkApi {
     public void authorize(AuthListener authListener) {
         Timber.d("VkApi.authorize(AuthListener)");
         mAuthListener = authListener;
+
         VKSdk.authorize(sMyScope, true, false);
     }
 

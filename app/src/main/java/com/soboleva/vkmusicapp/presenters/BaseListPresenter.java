@@ -56,4 +56,6 @@ public abstract class BaseListPresenter {
     public BaseListFragment getBaseListFragment() {
         return mBaseListFragment;
     }
+
+
 }

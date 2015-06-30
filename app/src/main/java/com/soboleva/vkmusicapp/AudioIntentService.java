@@ -15,13 +15,15 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.NotificationCompat;
 import com.soboleva.vkmusicapp.utils.FileDownloader;
-import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadedEvent;
 import com.soboleva.vkmusicapp.utils.PathHelper;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadedEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageDownloadingProgressEvent;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageInterruptDownloadingEvent;
 import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Intent.ACTION_MEDIA_SCANNER_SCAN_FILE;
@@ -54,8 +56,11 @@ public class AudioIntentService extends IntentService {
 
     private File mFile;
 
+    private ArrayList<String> mInterruptedList = new ArrayList<String>();
+
     public AudioIntentService() {
         super("AudioIntentService");
+        EventBus.getDefault().register(this);
     }
 
     public void onCreate() {
@@ -63,6 +68,7 @@ public class AudioIntentService extends IntentService {
 
         initMusicDirectory();
     }
+
 
     private FileDownloader.Callback buildFileDownloaderCallback() {
         return new FileDownloader.Callback() {
@@ -78,9 +84,7 @@ public class AudioIntentService extends IntentService {
             @Override
             public void onSizeReceived(int fullSize) {
                 mFullSize = fullSize;
-
                 Timber.d("on size received = %d", mFullSize);
-
                 startProgressNotification();
             }
 
@@ -88,9 +92,6 @@ public class AudioIntentService extends IntentService {
             public void onError() {
                 Timber.d("mCallback onError сейчас должен появиться toast");
                 //todo
-                /*Toast toast = Toast.makeText(getApplicationContext(),
-                        "Ошибочкка вышла", Toast.LENGTH_SHORT);
-                toast.show();*/
             }
         };
     }
@@ -138,6 +139,13 @@ public class AudioIntentService extends IntentService {
         mCurrentTitle = extras.getString(PARAM_TITLE);
         mAudioID = extras.getString(PARAM_AUDIO_ID);
 
+        if (mInterruptedList.contains(mAudioID)){
+            mInterruptedList.remove(mAudioID);
+            Timber.d("mInterruptedList remove element");
+            Timber.d("mInterruptedList contains %d", mInterruptedList.size());
+            return;
+        }
+
         EventBus.getDefault().post(new MessageAudioDownloadedEvent(mAudioID, true));
         EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, 0));
 
@@ -166,7 +174,7 @@ public class AudioIntentService extends IntentService {
         mBuilder.setContentTitle(mAudioName)
                 .setContentText("Downloading...") // todo
                 .setSmallIcon(R.drawable.ic_note_lightblue)
-                //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_note))
+                        //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_note))
                 .setOngoing(true);
 
         HandlerThread handlerThread = new HandlerThread("NotificationThread");
@@ -177,23 +185,23 @@ public class AudioIntentService extends IntentService {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mDownloadedSize != mFullSize) {
-
-                    Timber.d("notify about full size %d and downloaded size %d", mFullSize, mDownloadedSize);
+                if (mDownloadedSize != mFullSize && !mFileDownloader.isInterrupted()) {
 
                     mBuilder.setProgress(mFullSize, mDownloadedSize, false);
-                    Timber.d("progress posted = %d", (int)((float)mDownloadedSize/(float)mFullSize*100));
-                    EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, (int)((float)mDownloadedSize/(float)mFullSize*100)));
+                    EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, (int) ((float) mDownloadedSize / (float) mFullSize * 100)));
 
                     notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
                     handler.postDelayed(this, 300);
                 } else {
 
-                    mBuilder.setContentText("Download complete") // todo
-                            .setProgress(0, 0, false);
-
-
+                    if (mFileDownloader.isInterrupted()) {
+                        mBuilder.setContentText("Canceled")
+                                .setProgress(0, 0, false);
+                    } else {
+                        mBuilder.setContentText("Download complete") // todo
+                                .setProgress(0, 0, false);
+                    }
 
                     setNotificationOnClick(mBuilder);
                     notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
@@ -214,6 +222,7 @@ public class AudioIntentService extends IntentService {
                 .setOngoing(false);
     }
 
+    //todo
     private int getDuration(File file) {
         MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.parse(file.getAbsolutePath()));
         int duration = mediaPlayer.getDuration();
@@ -225,6 +234,28 @@ public class AudioIntentService extends IntentService {
 
         Timber.d("duration == %d min, %d sec", minutes, seconds);
 
+        mediaPlayer.release();
         return duration;
     }
+
+    public void onEventBackgroundThread(MessageInterruptDownloadingEvent event) {
+        Timber.d("Для того аудиио отмена? %b", mAudioID.equals(event.getAudioID()));
+        if(mAudioID.equals(event.getAudioID())) {
+            mFileDownloader.setIsInterrupted(true);
+            if (mInterruptedList.contains(event.getAudioID())){
+                mInterruptedList.remove(event.getAudioID());
+                Timber.d("mInterruptedList remove element");
+                Timber.d("mInterruptedList contains %d", mInterruptedList.size());
+            }
+        } else {
+            //user interrupt future downloading for audio which is waiting now
+            if (!mInterruptedList.contains(event.getAudioID())) {
+                mInterruptedList.add(event.getAudioID());
+            }
+            Timber.d("mInterruptedList add element");
+            Timber.d("mInterruptedList contains %d", mInterruptedList.size());
+        }
+        //mIsInterrupted = true;
+    }
+
 }

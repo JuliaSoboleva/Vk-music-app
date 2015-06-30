@@ -2,7 +2,6 @@ package com.soboleva.vkmusicapp.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -15,6 +14,9 @@ import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
 import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
+import com.soboleva.vkmusicapp.utils.NetworkHelper;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageInterruptDownloadingEvent;
+import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 import java.util.List;
@@ -38,10 +40,6 @@ public class AudioListFragment extends BaseListFragment {
         getListView().setEmptyView(
                 noItems(getResources().getString(R.string.no_audio)));
 
-//        this.getListView().setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-//                FrameLayout.LayoutParams.MATCH_PARENT));
-
-
     }
 
     @Override
@@ -58,13 +56,18 @@ public class AudioListFragment extends BaseListFragment {
     }
 
     public void downloadAudio(Audio audio) {
-        Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
-        Intent i = new Intent(getActivity().getApplicationContext(), AudioIntentService.class);
-        i.putExtra(AudioIntentService.PARAM_URL, audio.getURL());
-        i.putExtra(AudioIntentService.PARAM_TITLE, audio.getTitle());
-        i.putExtra(AudioIntentService.PARAM_ARTIST, audio.getArtist());
-        i.putExtra(AudioIntentService.PARAM_AUDIO_ID, audio.getID());
-        getActivity().getApplicationContext().startService(i);
+        if (audio.isDownloading()) {
+            EventBus.getDefault().post(new MessageInterruptDownloadingEvent(audio.getID()));
+            Timber.d("Interrupt downloading");
+        } else {
+            Timber.d("Downloading audio %s - %s", audio.getArtist(), audio.getTitle());
+            Intent i = new Intent(getActivity().getApplicationContext(), AudioIntentService.class);
+            i.putExtra(AudioIntentService.PARAM_URL, audio.getURL());
+            i.putExtra(AudioIntentService.PARAM_TITLE, audio.getTitle());
+            i.putExtra(AudioIntentService.PARAM_ARTIST, audio.getArtist());
+            i.putExtra(AudioIntentService.PARAM_AUDIO_ID, audio.getID());
+            getActivity().getApplicationContext().startService(i);
+        }
     }
 
     public void addAudio(Audio audio) {
@@ -88,11 +91,6 @@ public class AudioListFragment extends BaseListFragment {
         adapter.notifyDataSetChanged();
     }
 
-
-    /*public  boolean isNetworkAvailable() {
-        Context context = this.getActivity().getApplicationContext();
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
-    }*/
 
     private View noItems(String text) {
 
@@ -123,7 +121,7 @@ public class AudioListFragment extends BaseListFragment {
                 //todo
                 break;
             case STATE_ERROR:
-                if (!isNetworkAvailable()) {
+                if (this.getActivity()!=null && !NetworkHelper.isNetworkAvailable(this.getActivity().getApplicationContext())) {
                     mEmptyImageView.setImageResource(R.drawable.ic_owl);
                     mEmptyTextView.setText(R.string.no_internet);
                 }
@@ -142,9 +140,5 @@ public class AudioListFragment extends BaseListFragment {
 
     }
 
-    private  boolean isNetworkAvailable() {
-        Context context = this.getActivity().getApplicationContext();
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
-    }
 
 }

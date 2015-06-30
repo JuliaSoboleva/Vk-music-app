@@ -33,7 +33,7 @@
             android:layout_marginLeft="8dp"
             class="mbanje.kurt.fabbutton.FabButton"
             android:id="@+id/determinate"
-            android:color="@color/colorDivider"
+            android:color="@color/colorGrey"
             android:src="@drawable/ic_downloading"
             android:visibility="visible"
             android:indeterminate="false"
@@ -58,11 +58,7 @@
             android:background="@drawable/add_button_selector"
             />
 
-    <!--android:visibility="gone"-->
 
-
-
-    <!--android:src="@drawable/ic_arrow_down_bold_circle"-->
 
     <TextView
             android:id="@+id/text_duration"

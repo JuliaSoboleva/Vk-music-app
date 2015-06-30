@@ -4,7 +4,9 @@ import android.content.Intent;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.soboleva.vkmusicapp.api.vk.callbacks.AuthListener;
 import com.soboleva.vkmusicapp.ui.activities.MainActivity;
+import com.soboleva.vkmusicapp.utils.NetworkHelper;
 import timber.log.Timber;
+
 
 public class MainPresenter {
     private final VkApi mVkApi;
@@ -18,8 +20,10 @@ public class MainPresenter {
         if (mVkApi.wakeUpSession()) {
             Timber.d("wakeUpSession == true");
             mMainActivity.startAudioActivity();
-            mMainActivity.finish();
+            //mMainActivity.finish();
         }
+
+
     }
 
     public void onActivityResult(MainActivity mainActivity, int requestCode, int resultCode, Intent data) {
@@ -27,28 +31,25 @@ public class MainPresenter {
     }
 
     public void authorize() {
-        mVkApi.authorize(new AuthListener() {
-            @Override
-            public void onLogin() {
-                Timber.d("mainPresenter -> authorize() -> onLogin()");
-                mMainActivity.startAudioActivity();
-            }
+        //todo
+        if (NetworkHelper.isNetworkAvailable(mMainActivity.getApplicationContext())) {
+            mVkApi.authorize(new AuthListener() {
+                @Override
+                public void onLogin() {
+                    Timber.d("mainPresenter -> authorize() -> onLogin()");
+                    mMainActivity.startAudioActivity();
+                }
 
-            @Override
-            public void onError() {
-                Timber.d("mainPresenter -> authorize() -> onError()");
-                mMainActivity.showErrorMessage();
-                // todo show error dialog
-            }
-        });
+                @Override
+                public void onError() {
+                    Timber.d("mainPresenter -> authorize() -> onError()");
+                    //mMainActivity.showErrorMessage();
+
+                }
+            });
+        }
     }
 
-    public void logout() {
-        Timber.d("MainPresenter -> logout()");
-        mVkApi.logOut();
-    }
 
-    public boolean isLoggedIn() {
-        return mVkApi.isLoggedIn();
-    }
+
 }

@@ -7,6 +7,8 @@ import android.widget.AbsListView;
 import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
 import com.soboleva.vkmusicapp.presenters.BaseListPresenter;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageNeedToUpdateEvent;
+import de.greenrobot.event.EventBus;
 import timber.log.Timber;
 
 import java.util.List;
@@ -21,14 +23,15 @@ public abstract class BaseListFragment extends ListFragment {
     protected BaseListPresenter mBaseListPresenter;
 
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
         setScrollListener();
-
-
-
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void setScrollListener() {
@@ -55,5 +58,11 @@ public abstract class BaseListFragment extends ListFragment {
     }
     public abstract void showItems(List<? extends BaseData> dataList);
     public abstract void showWithAddedItems(List<? extends BaseData> dataList);
+
+
+    public void onEventMainThread(MessageNeedToUpdateEvent event){
+        mBaseListPresenter.getItems();
+    }
+
 
 }

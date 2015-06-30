@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,12 +16,10 @@ import com.soboleva.vkmusicapp.ui.fragments.SearchAudioListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.ViewPagerFragment;
 import timber.log.Timber;
 
-public class AudioListActivity extends ActionBarActivity {
+public class AudioListActivity extends BaseActivity {
 
     private Toolbar mToolbar;
     private SearchView mSearchView;
-
-    //private boolean mIsEmtyNow;
 
     private AudioActivityPresenter mAudioActivityPresenter;
 
@@ -42,7 +39,7 @@ public class AudioListActivity extends ActionBarActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        //MenuItem searchItem = menu.findItem(R.id.action_search);
 
         mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -54,7 +51,6 @@ public class AudioListActivity extends ActionBarActivity {
                         .addToBackStack(null)
                         .replace(R.id.fragment_container, searchAudioListFragment)
                         .commit();
-                //mIsEmtyNow = false;
 
                 return false;
 
@@ -111,27 +107,7 @@ public class AudioListActivity extends ActionBarActivity {
                 .commit();
 
 
-
-        /*if (mIsEmtyNow) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new ViewPagerFragment())
-                    .commit();
-            mIsEmtyNow = false;
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new ViewPagerFragment())
-                    .commit();
-            mIsEmtyNow = false;
-        }*/
     }
-
-   /* public void showEmpty(int state) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, EmptyListFragment.instantiate(this, state))
-                .commit();
-        mIsEmtyNow = true;
-
-    }*/
 
 
 }

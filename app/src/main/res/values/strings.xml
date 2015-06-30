@@ -2,6 +2,7 @@
     <string name="app_name">VK Music App</string>
     <string name="no_audio">Нет аудиозаписей</string>
     <string name="no_internet">Нет соединения...</string>
+    <string name="internet">Появилось соединение!</string>
     <string name="error">Произошла ошибка</string>
     <string name="authorize">ВХОД</string>
     <string name="logout">Logout</string>

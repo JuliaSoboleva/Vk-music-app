@@ -11,6 +11,7 @@ import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
 import com.soboleva.vkmusicapp.presenters.FriendPresenter;
 import com.soboleva.vkmusicapp.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicapp.ui.adapters.FriendListAdapter;
+import com.soboleva.vkmusicapp.utils.NetworkHelper;
 
 import java.util.List;
 
@@ -39,10 +40,14 @@ public class FriendListFragment extends BaseListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Friend friend = (Friend) getListAdapter().getItem(position);
-                Intent intent = new Intent(getActivity(), FriendAudioActivity.class);
-                intent.putExtra(FriendAudioActivity.FRIEND, friend);
-                startActivity(intent);
+                if (NetworkHelper.isNetworkAvailable(getActivity().getApplicationContext())) {
+                    Friend friend = (Friend) getListAdapter().getItem(position);
+                    Intent intent = new Intent(getActivity(), FriendAudioActivity.class);
+                    intent.putExtra(FriendAudioActivity.FRIEND, friend);
+                    startActivity(intent);
+                } else {
+                    //noop
+                }
             }
         });
     }
