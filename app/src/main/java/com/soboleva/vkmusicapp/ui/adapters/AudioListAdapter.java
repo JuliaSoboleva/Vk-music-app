@@ -26,8 +26,6 @@ public class AudioListAdapter extends BaseAdapter {
     private OnAddButtonClickListener mOnAddButtonClickListener;
     private boolean mAddAble;
 
-    private ArrayList<String> mWaitingAudios = new ArrayList<String>();
-
 
     public static interface OnDownloadButtonClickListener {
         void onClick(Audio audio);
@@ -198,11 +196,11 @@ public class AudioListAdapter extends BaseAdapter {
                         Timber.d("нужный id, change to %b", state);
                         audio.setWaiting(value);
                     }
-                    if (value) {
-                        mWaitingAudios.add(audioID);
-                    } else {
-                        mWaitingAudios.remove(audioID);
-                    }
+//                    if (value) {
+//                        mWaitingAudios.add(audioID);
+//                    } else {
+//                        mWaitingAudios.remove(audioID);
+//                    }
                 }
                 break;
         }
@@ -233,15 +231,15 @@ public class AudioListAdapter extends BaseAdapter {
         if (audio.getDownloadingProgress() != 100) {
             if (audio.isWaiting() || audio.isDownloading()) {
                 if (fabButton.getDrawablesRes()[0] != R.drawable.ic_cancel ||
-                        fabButton.getDrawablesRes()[1] != R.drawable.ic_fab_complete) {
-                    fabButton.setIcon(R.drawable.ic_cancel, R.drawable.ic_fab_complete);
+                        fabButton.getDrawablesRes()[1] != R.drawable.ic_done) {
+                    fabButton.setIcon(R.drawable.ic_cancel, R.drawable.ic_done);
                     Timber.d("FabButton sets cancelable");
                 }
 
             } else { //normal state
                 if (fabButton.getDrawablesRes()[0] != R.drawable.ic_downloading ||
-                        fabButton.getDrawablesRes()[1] != R.drawable.ic_fab_complete) {
-                    fabButton.setIcon(R.drawable.ic_downloading, R.drawable.ic_fab_complete);
+                        fabButton.getDrawablesRes()[1] != R.drawable.ic_done) {
+                    fabButton.setIcon(R.drawable.ic_downloading, R.drawable.ic_done);
                     Timber.d("FabButton sets normal");
                 }
             }
@@ -257,9 +255,20 @@ public class AudioListAdapter extends BaseAdapter {
         if((audio.getDownloadingProgress() == 100) != fabButton.isShowEndBitmap()) {
            fabButton.setShowEndBitmap(audio.getDownloadingProgress() == 100);
             if (fabButton.isShowEndBitmap()) {
-                fabButton.setIcon(R.drawable.ic_fab_complete, R.drawable.ic_fab_complete);
+                fabButton.setIcon(R.drawable.ic_done, R.drawable.ic_done);
             }
         }
 
     }
+
+    public void remove(int position) {
+        mAudioList.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void insert(int position, Audio item) {
+        mAudioList.add(position, item);
+        notifyDataSetChanged();
+    }
+
 }

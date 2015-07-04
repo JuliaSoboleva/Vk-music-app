@@ -177,6 +177,16 @@ public class VkApi {
         request.executeWithListener(null);
     }
 
+    public void deleteAudio(String audioID, String ownerID) {
+        VKRequest request = new VKRequest("audio.delete", VKParameters.from(VKApiConst.OWNER_ID, ownerID, "audio_id", audioID));
+        request.executeWithListener(null);
+    }
+
+    public void restoreAudio(String audioID, String ownerID) {
+        VKRequest request = new VKRequest("audio.restore", VKParameters.from(VKApiConst.OWNER_ID, ownerID, "audio_id", audioID));
+        request.executeWithListener(null);
+    }
+
     public void getAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count, String friendID) {
         VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, count,
                 VKApiConst.OFFSET, offset, VKApiConst.OWNER_ID, friendID));

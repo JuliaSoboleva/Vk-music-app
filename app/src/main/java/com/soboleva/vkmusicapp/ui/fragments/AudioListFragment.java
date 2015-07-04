@@ -51,8 +51,6 @@ public class AudioListFragment extends BaseListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Timber.d("onViewCreated");
-
     }
 
     public void downloadAudio(Audio audio) {
@@ -75,6 +73,11 @@ public class AudioListFragment extends BaseListFragment {
         audioPresenter.addAudio(audio);
     }
 
+    public void deleteAudio(Audio audio) {
+        AudioPresenter audioPresenter = (AudioPresenter) mBaseListPresenter;
+        audioPresenter.deleteAudio(audio);
+    }
+
 
     @Override
     public void showItems(List<? extends BaseData> dataList) {
@@ -90,7 +93,6 @@ public class AudioListFragment extends BaseListFragment {
         adapter.setAddedAudioList((List<Audio>) dataList);
         adapter.notifyDataSetChanged();
     }
-
 
     private View noItems(String text) {
 

@@ -41,7 +41,7 @@
             app:fbb_autoStart="false"
             app:fbb_progressColor="@color/colorPrimary"
             app:fbb_progressWidthRatio="0.2"
-            app:fbb_endBitmap="@drawable/ic_fab_complete"
+            app:fbb_endBitmap="@drawable/ic_done"
             app:fbb_showEndBitmap="true"
             />
 
