@@ -22,6 +22,8 @@ public abstract class BaseListFragment extends ListFragment {
 
     protected BaseListPresenter mBaseListPresenter;
 
+    //protected int mFirstVisibleItem;
+
 
 
     @Override
@@ -43,6 +45,7 @@ public abstract class BaseListFragment extends ListFragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //mFirstVisibleItem = firstVisibleItem;
                 int total = mBaseListPresenter.getTotalItemCount();
                 int available = mBaseListPresenter.getAvailableItemCount();
                 if (firstVisibleItem + visibleItemCount >= totalItemCount - 5 && available < total && !mBaseListPresenter.isDownloadingNow()) {

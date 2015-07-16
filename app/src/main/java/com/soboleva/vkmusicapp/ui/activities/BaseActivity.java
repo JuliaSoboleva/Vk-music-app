@@ -51,8 +51,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public void onEventMainThread(MessageInternetStateChangedEvent event) {
-        showInternetState(event.isState());
-        if (event.isState()) {
+        showInternetState(event.getState());
+        if (event.getState()) {
             EventBus.getDefault().post(new MessageNeedToUpdateEvent());
         }
     }

@@ -31,5 +31,7 @@ dependencies {
     compile 'com.github.traex.rippleeffect:library:1.2.4'
     compile 'com.nispok:snackbar:2.10.8'
     compile project(':fabbutton')
-    compile 'de.timroes.android:EnhancedListView:0.3.4'
+    //    compile 'de.timroes.android:EnhancedListView:0.3.4'
+    //    compile 'com.baoyz.swipemenulistview:library:1.1.0'
+    compile project(':swipemenu')
 }

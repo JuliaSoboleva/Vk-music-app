@@ -10,7 +10,10 @@
     <color name="colorDivider">#B6B6B6</color>
 
     <color name="colorRed">#F44336</color>
-    <color name="colorGreen">#4CAF50</color>
     <color name="colorGrey">#eeeeee</color>
+    <color name="colorPink">#D81B60</color>
+    <color name="colorPurpure">#9c27b0</color>
+    <color name="colorDeepPurpure">#673ab7</color>
+
 
 </resources>

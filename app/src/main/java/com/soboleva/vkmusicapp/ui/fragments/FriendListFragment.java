@@ -50,18 +50,21 @@ public class FriendListFragment extends BaseListFragment {
                 }
             }
         });
+
     }
 
     @Override
     public void showItems(List<? extends BaseData> dataList) {
         FriendListAdapter adapter = (FriendListAdapter) getListAdapter();
-        adapter.setFriendList((List<Friend>)dataList);
+        adapter.setFriendList((List<Friend>) dataList);
     }
 
     @Override
     public void showWithAddedItems(List<? extends BaseData> dataList) {
         FriendListAdapter adapter = (FriendListAdapter) getListAdapter();
-        adapter.setAddedFriendList((List<Friend>)dataList);
+        adapter.setAddedFriendList((List<Friend>) dataList);
     }
+
+
 
 }

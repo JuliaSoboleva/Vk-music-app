@@ -24,15 +24,11 @@ public abstract class AudioPresenter extends BaseListPresenter {
         adapter.notifyDataSetChanged();
     }
 
-    public void deleteAudio(Audio audio){
+    public void deleteAudio(int position){
+        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
+        Audio audio = (Audio) adapter.getItem(position);
+        adapter.remove(position);
         mVkApi.deleteAudio(audio.getID(), audio.getOwnerID());
-        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
-        adapter.notifyDataSetChanged();
-    }
-
-    public void restoreAudio(Audio audio){
-        mVkApi.restoreAudio(audio.getID(), audio.getOwnerID());
-        AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
         adapter.notifyDataSetChanged();
     }
 

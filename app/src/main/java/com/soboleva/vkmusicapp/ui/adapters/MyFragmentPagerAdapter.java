@@ -11,17 +11,20 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
 
     static final int PAGE_COUNT = 2;
+
     private Context mContext;
+
     private int mCurrentPosition;
+
 
     public MyFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
+        mCurrentPosition = 0;
     }
 
     @Override
     public Fragment getItem(int position) {
-        //return PageFragment.instanceOf(position)
         mCurrentPosition = position;
         switch (position) {
             case 0:
@@ -31,6 +34,14 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
+    }
+
+    public int getCurrentPosition() {
+        return mCurrentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        mCurrentPosition = currentPosition;
     }
 
     @Override

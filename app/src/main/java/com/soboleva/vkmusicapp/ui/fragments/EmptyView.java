@@ -31,44 +31,4 @@ public class EmptyView extends RelativeLayout {
         addView(mImageView);
     }
 
-
-   /* @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Timber.d("viewPager -> onCreateView");
-        View view = inflater.inflate(R.layout.view_empty_list, container, false);
-        mImageView = (ImageView) view.findViewById(R.id.picture_empty_list);
-        mTextView = (TextView)view.findViewById(R.id.text_empty_list);
-
-        switch (mState) {
-            case STATE_NO_AUDIO:
-                mImageView.setImageResource(R.drawable.ic_owl);
-                mTextView.setText(R.string.no_audio);
-                break;
-            case STATE_NO_INTERNET:
-                mTextView.setText(R.string.no_internet);
-                //todo
-                break;
-            case STATE_ERROR:
-                if (isNetworkAvailable()) {
-                    mTextView.setText(R.string.error);
-                }
-                else {
-                    mTextView.setText(R.string.no_internet);
-                }
-                //todo
-                break;
-            default:
-                break;
-
-        }
-
-        return view;
-    }
-
-    private  boolean isNetworkAvailable() {
-        Context context = this.getActivity().getApplicationContext();
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
-    }*/
-
-
 }

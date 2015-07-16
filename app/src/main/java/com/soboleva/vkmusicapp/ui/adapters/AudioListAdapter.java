@@ -196,11 +196,6 @@ public class AudioListAdapter extends BaseAdapter {
                         Timber.d("нужный id, change to %b", state);
                         audio.setWaiting(value);
                     }
-//                    if (value) {
-//                        mWaitingAudios.add(audioID);
-//                    } else {
-//                        mWaitingAudios.remove(audioID);
-//                    }
                 }
                 break;
         }
@@ -266,9 +261,9 @@ public class AudioListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void insert(int position, Audio item) {
-        mAudioList.add(position, item);
-        notifyDataSetChanged();
-    }
+//    public void insert(int position, Audio item) {
+//        mAudioList.add(position, item);
+//        notifyDataSetChanged();
+//    }
 
 }

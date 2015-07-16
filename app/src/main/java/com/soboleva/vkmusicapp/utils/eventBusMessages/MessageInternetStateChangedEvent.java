@@ -7,7 +7,7 @@ public class MessageInternetStateChangedEvent {
         this.state = state;
     }
 
-    public boolean isState() {
+    public boolean getState() {
         return state;
     }
 }

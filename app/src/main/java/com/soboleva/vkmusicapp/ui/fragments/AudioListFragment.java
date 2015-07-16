@@ -73,12 +73,6 @@ public class AudioListFragment extends BaseListFragment {
         audioPresenter.addAudio(audio);
     }
 
-    public void deleteAudio(Audio audio) {
-        AudioPresenter audioPresenter = (AudioPresenter) mBaseListPresenter;
-        audioPresenter.deleteAudio(audio);
-    }
-
-
     @Override
     public void showItems(List<? extends BaseData> dataList) {
         AudioListAdapter adapter = (AudioListAdapter) getListAdapter();
@@ -131,7 +125,6 @@ public class AudioListFragment extends BaseListFragment {
                     mEmptyImageView.setImageResource(R.drawable.ic_pug);
                     mEmptyTextView.setText(R.string.error);
                 }
-
 
                 //todo
                 break;

@@ -8,20 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.soboleva.vkmusicapp.R;
+import com.soboleva.vkmusicapp.ui.CustomViewPager;
 import com.soboleva.vkmusicapp.ui.adapters.MyFragmentPagerAdapter;
 import timber.log.Timber;
 
 public class ViewPagerFragment extends Fragment {
 
-    private ViewPager mPager;
+    private CustomViewPager mPager;
     private PagerSlidingTabStrip mTabs;
     private MyFragmentPagerAdapter mPagerAdapter;
 
-    private int mCurrentFragmentIndex;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mCurrentFragmentIndex = 0;
         super.onCreate(savedInstanceState);
         Timber.d("viewPager -> onCreate");
     }
@@ -30,7 +28,7 @@ public class ViewPagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Timber.d("viewPager -> onCreateView");
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
-        mPager = (ViewPager) view.findViewById(R.id.pager);
+        mPager = (CustomViewPager) view.findViewById(R.id.pager);
         setupPagerAdapter();
 
         // Bind the tabs to the ViewPager
@@ -48,7 +46,7 @@ public class ViewPagerFragment extends Fragment {
 
         Timber.d("viewPager -> setupPagerAdapter");
 
-        mPagerAdapter = new MyFragmentPagerAdapter(/*getActivity().getSupportFragmentManager()*/getChildFragmentManager(), getActivity());
+        mPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager(), getActivity());
         mPager.setAdapter(mPagerAdapter);
 
     }
@@ -57,12 +55,12 @@ public class ViewPagerFragment extends Fragment {
         mTabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mCurrentFragmentIndex = position;
                 Timber.d("onPageSelected, position = %d", position);
             }
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
