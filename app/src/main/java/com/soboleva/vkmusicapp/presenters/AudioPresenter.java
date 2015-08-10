@@ -3,7 +3,7 @@ package com.soboleva.vkmusicapp.presenters;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
-import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadedEvent;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadingEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioWaitingEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageDownloadingProgressEvent;
 import de.greenrobot.event.EventBus;
@@ -32,7 +32,7 @@ public abstract class AudioPresenter extends BaseListPresenter {
         adapter.notifyDataSetChanged();
     }
 
-    public void onEventMainThread(MessageAudioDownloadedEvent event){
+    public void onEventMainThread(MessageAudioDownloadingEvent event){
         AudioListAdapter adapter = (AudioListAdapter)getBaseListFragment().getListAdapter();
         adapter.changeAudioStates(event.getAudioID(), AudioListAdapter.STATE_DOWNLOADING, event.isDownloading());
     }

@@ -16,9 +16,11 @@ import java.util.List;
 
 public class FriendListAdapter extends BaseAdapter {
     private List<Friend> mFriendList;
+    private Context mContext;
 
     public FriendListAdapter(Context context) {
         mFriendList = new ArrayList<>();
+        mContext = context;
     }
 
 
@@ -81,7 +83,7 @@ public class FriendListAdapter extends BaseAdapter {
         // картинки, кнопки, всё подряд
         holder.mName.setText(friend.getFirstName() + " " + friend.getLastName());
         String imageUrl = friend.getPhoto100();
-        ImageLoaderWrapper.getInstance().displayImage(imageUrl, holder.mPhoto);
+        ImageLoaderWrapper.getInstance().displayImage(mContext, imageUrl, holder.mPhoto);
         return convertView;
     }
 

@@ -64,6 +64,7 @@ public class AudioListFragment extends BaseListFragment {
             i.putExtra(AudioIntentService.PARAM_TITLE, audio.getTitle());
             i.putExtra(AudioIntentService.PARAM_ARTIST, audio.getArtist());
             i.putExtra(AudioIntentService.PARAM_AUDIO_ID, audio.getID());
+            i.putExtra(AudioIntentService.PARAM_DURATION, Integer.valueOf(audio.getDuration()));
             getActivity().getApplicationContext().startService(i);
         }
     }
@@ -114,6 +115,11 @@ public class AudioListFragment extends BaseListFragment {
             case STATE_NO_INTERNET:
                 mEmptyImageView.setImageResource(R.drawable.ic_owl);
                 mEmptyTextView.setText(R.string.no_internet);
+
+                break;
+            case STATE_NO_ACCESS:
+                mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                mEmptyTextView.setText(R.string.no_access);
                 //todo
                 break;
             case STATE_ERROR:
@@ -125,13 +131,13 @@ public class AudioListFragment extends BaseListFragment {
                     mEmptyImageView.setImageResource(R.drawable.ic_pug);
                     mEmptyTextView.setText(R.string.error);
                 }
-
                 //todo
                 break;
             default:
                 break;
 
         }
+
 
     }
 

@@ -4,8 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.soboleva.vkmusicapp.ui.fragments.OwnAudioListFragment;
+import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.ui.fragments.FriendListFragment;
+import com.soboleva.vkmusicapp.ui.fragments.OwnAudioListFragment;
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -51,7 +52,8 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return (position==0) ? "My audio list" : "Friend list";
+        return (position==0) ? mContext.getResources().getString(R.string.my_audio)
+                : mContext.getResources().getString(R.string.friends);
     }
 
 

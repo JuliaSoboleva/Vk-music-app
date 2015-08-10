@@ -15,6 +15,7 @@ import com.soboleva.swipemenu.SwipeMenuCreator;
 import com.soboleva.swipemenu.SwipeMenuItem;
 import com.soboleva.swipemenu.SwipeMenuListView;
 import com.soboleva.vkmusicapp.R;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnDownloadButtonClickListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
 import com.soboleva.vkmusicapp.presenters.BaseListPresenter;
@@ -52,7 +53,7 @@ public class OwnAudioListFragment extends AudioListFragment {
         mBaseListPresenter = new OwnAudioPresenter(this);
         mBaseListPresenter.getItems();
 
-        setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
+        setListAdapter(new AudioListAdapter(new OnDownloadButtonClickListener() {
             @Override
             public void onClick(Audio audio) {
                 Timber.d("on click OwnAudioListFragment");

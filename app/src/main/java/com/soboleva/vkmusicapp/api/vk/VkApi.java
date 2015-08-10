@@ -1,21 +1,23 @@
 package com.soboleva.vkmusicapp.api.vk;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import com.google.gson.Gson;
 import com.soboleva.vkmusicapp.api.vk.callbacks.AuthListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnFriendListDownloadedListener;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnPhotoDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.AudioResponseModel;
 import com.soboleva.vkmusicapp.api.vk.models.friends.FriendResponseModel;
-import com.vk.sdk.*;
+import com.soboleva.vkmusicapp.api.vk.models.photos.PhotoResponseModel;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.*;
-import com.vk.sdk.dialogs.VKCaptchaDialog;
 import timber.log.Timber;
 
 public class VkApi {
 
-    private static String API_ID = "4869131";
+    //private static String API_ID = "4869131";
 
     private static VkApi sInstance;
 
@@ -43,67 +45,95 @@ public class VkApi {
         return sInstance;
     }
 
-    public boolean wakeUpSession() {
-        return VKSdk.wakeUpSession();
+    public void login(Activity activity) {
+        VKSdk.login(activity, sMyScope);
     }
 
-    private VKSdkListener mAuthorizationListener = new VKSdkListener() {
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public boolean wakeUpSession() {
+        return VKSdk.wakeUpSession(null);
+    }
+
+    private VKRequest.VKRequestListener mAuthorizationListener = new VKRequest.VKRequestListener() {
         @Override
-        public void onRenewAccessToken(VKAccessToken token) {
-            Timber.d("VkSdkListener onRenewAccessToken");
-            super.onRenewAccessToken(token);
+        public void onComplete(VKResponse response) {
+            super.onComplete(response);
         }
 
         @Override
-        public void onCaptchaError(VKError captchaError) {
-            Timber.d("VkSdkListener onCaptchaError");
-            new VKCaptchaDialog(captchaError).show();
+        public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
+            super.attemptFailed(request, attemptNumber, totalAttempts);
         }
 
         @Override
-        public void onTokenExpired(VKAccessToken expiredToken) {
-            Timber.d("VkSdkListener onTokenExpired");
-            VKSdk.authorize(sMyScope, true, false);
+        public void onError(VKError error) {
+            super.onError(error);
         }
 
         @Override
-        public void onAccessDenied(VKError vkError) {
-            Timber.d("VkSdkListener onAccessDenied");
-            if (mAuthListener != null) {
-                mAuthListener.onError();
-            }
-        }
-
-        @Override
-        public void onReceiveNewToken(VKAccessToken newToken) {
-            Timber.d("vksdkListener -> onReceiveNewToken");
-            if (mAuthListener != null) {
-                mAuthListener.onLogin();
-            }
-        }
-
-        @Override
-        public void onAcceptUserToken(VKAccessToken token) {
-            Timber.d("vksdkListener -> onAcceptUserToken");
-            mAuthListener.onLogin();
+        public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
+            super.onProgress(progressType, bytesLoaded, bytesTotal);
         }
     };
 
-    public void initialize() {
+//    private VKSdkListener mAuthorizationListener = new VKSdkListener() {
+//        @Override
+//        public void onRenewAccessToken(VKAccessToken token) {
+//            Timber.d("VkSdkListener onRenewAccessToken");
+//            super.onRenewAccessToken(token);
+//        }
+//
+//        @Override
+//        public void onCaptchaError(VKError captchaError) {
+//            Timber.d("VkSdkListener onCaptchaError");
+//            new VKCaptchaDialog(captchaError).show();
+//        }
+//
+//        @Override
+//        public void onTokenExpired(VKAccessToken expiredToken) {
+//            Timber.d("VkSdkListener onTokenExpired");
+//            VKSdk.authorize(sMyScope, true, false);
+//        }
+//
+//        @Override
+//        public void onAccessDenied(VKError vkError) {
+//            Timber.d("VkSdkListener onAccessDenied");
+//            if (mAuthListener != null) {
+//                mAuthListener.onError();
+//            }
+//        }
+//
+//        @Override
+//        public void onReceiveNewToken(VKAccessToken newToken) {
+//            Timber.d("vksdkListener -> onReceiveNewToken");
+//            if (mAuthListener != null) {
+//                mAuthListener.onLogin();
+//            }
+//        }
+//
+//        @Override
+//        public void onAcceptUserToken(VKAccessToken token) {
+//            Timber.d("vksdkListener -> onAcceptUserToken");
+//            mAuthListener.onLogin();
+//        }
+//    };
+
+    public void initialize(Context appContext) {
         Timber.d("VkApi.initialize()");
-        VKSdk.initialize(mAuthorizationListener, API_ID);
+//        VKSdk.initialize(mAuthorizationListener, API_ID);
+        VKSdk.initialize(appContext );
     }
 
     public void logOut() {
         VKSdk.logout();
     }
 
-    public void authorize(AuthListener authListener) {
-        Timber.d("VkApi.authorize(AuthListener)");
-        mAuthListener = authListener;
-
-        VKSdk.authorize(sMyScope, true, false);
-    }
+//    public void authorize(AuthListener authListener) {
+//        Timber.d("VkApi.authorize(AuthListener)");
+//        mAuthListener = authListener;
+//
+//        VKSdk.authorize(sMyScope, true, false);
+//    }
 
     public void getMyAudio(final OnAudioListDownloadedListener onAudioListDownloadedListener, int offset, int count) {
         VKRequest request = new VKRequest("audio.get", VKParameters.from(VKApiConst.COUNT, count,
@@ -148,13 +178,10 @@ public class VkApi {
         return VKSdk.isLoggedIn();
     }
 
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        VKUIHelper.onActivityResult(activity, requestCode, resultCode, data);
-    }
 
     public void getFriends(final OnFriendListDownloadedListener onFriendListDownloadedListener, int offset, int count) {
         VKRequest request = new VKRequest("friends.get", VKParameters.from(VKApiConst.COUNT, count,
-                VKApiConst.OFFSET, offset, VKApiConst.FIELDS, "photo_100", "order", "hints"));
+                VKApiConst.OFFSET, offset, VKApiConst.FIELDS, "photo_100, photo_200_orig", "order", "hints"));
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
@@ -207,15 +234,32 @@ public class VkApi {
 
     }
 
-    public static void onCreate(Activity activity) {
-        VKUIHelper.onCreate(activity);
+    public void getFriendPhoto(final OnPhotoDownloadedListener onPhotoDownloadedListener, String friendID) {
+        VKRequest request = new VKRequest("photos.get", VKParameters.from(VKApiConst.OWNER_ID, friendID,
+                VKApiConst.ALBUM_ID, "profile", VKApiConst.REV, "1", VKApiConst.COUNT, "1"));
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                PhotoResponseModel photoResponseModel = mGson.fromJson(response.responseString, PhotoResponseModel.class);
+                if (photoResponseModel.getPhotoResponse().getCount() != 0) {
+                    onPhotoDownloadedListener.OnFriendPhotoDownloaded(photoResponseModel.getPhotoResponse().getPhoto());
+                } else {
+                    onPhotoDownloadedListener.onError();
+                }
+
+            }
+        });
     }
 
-    public static void onResume(Activity activity) {
-        VKUIHelper.onResume(activity);
-    }
-
-    public static void onDestroy(Activity activity) {
-        VKUIHelper.onDestroy(activity);
-    }
+//    public static void onCreate(Activity activity) {
+//        VKUIHelper.onCreate(activity);
+//    }
+//
+//    public static void onResume(Activity activity) {
+//        VKUIHelper.onResume(activity);
+//    }
+//
+//    public static void onDestroy(Activity activity) {
+//        VKUIHelper.onDestroy(activity);
+//    }
 }

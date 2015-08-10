@@ -17,14 +17,6 @@
             android:src="@drawable/ic_note_lightblue"
             />
 
-    <!--<Button-->
-            <!--android:id="@+id/save"-->
-            <!--android:layout_width="@dimen/button_small"-->
-            <!--android:layout_height="@dimen/button_small"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:background="@drawable/download_button_selector"-->
-            <!--/>-->
 
     <view
             android:layout_width="@dimen/button_small"
@@ -66,6 +58,7 @@
             android:layout_height="@dimen/button_small"
             android:layout_toLeftOf="@id/button_add"
             android:layout_toStartOf="@id/button_add"
+            android:textColor="@color/colorSecondaryText"
             tools:text="3:15"
             android:gravity="center_vertical"
 

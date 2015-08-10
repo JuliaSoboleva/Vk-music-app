@@ -39,13 +39,13 @@
             >
     </com.soboleva.vkmusicapp.ui.CustomViewPager>
 
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_below="@id/tabs"
-                 android:foreground="@drawable/shadow_toolbar"
-            >
+    <!--<FrameLayout android:layout_width="match_parent"-->
+                 <!--android:layout_height="match_parent"-->
+                 <!--android:layout_below="@id/tabs"-->
+                 <!--android:foreground="@drawable/shadow_toolbar"-->
+            <!-->-->
 
-            </FrameLayout>
+            <!--</FrameLayout>-->
 
 
 </RelativeLayout>

@@ -15,15 +15,12 @@ import java.util.List;
 
 public abstract class BaseListFragment extends ListFragment {
 
-    public static String STATE_KEY = "state";
     public static final int STATE_NO_AUDIO = 0;
     public static final int STATE_NO_INTERNET = 1;
     public static final int STATE_ERROR = 2;
+    public static final int STATE_NO_ACCESS = 3;
 
     protected BaseListPresenter mBaseListPresenter;
-
-    //protected int mFirstVisibleItem;
-
 
 
     @Override
@@ -34,6 +31,8 @@ public abstract class BaseListFragment extends ListFragment {
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
+        getListView().setVerticalScrollBarEnabled(false);
     }
 
     private void setScrollListener() {

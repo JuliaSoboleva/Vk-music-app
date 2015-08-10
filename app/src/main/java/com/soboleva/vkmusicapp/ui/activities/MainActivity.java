@@ -26,7 +26,6 @@ public class MainActivity extends BaseActivity {
         mMainPresenter = new MainPresenter(this);
 
         setupUI();
-        //showButtons();
 
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         Timber.d("fingerprints = %s", fingerprints);
@@ -38,6 +37,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mMainPresenter.onActivityResult(this, requestCode, resultCode, data);
+
+    }
+
+    public void defaultOnActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setupUI() {

@@ -19,6 +19,7 @@
               android:textSize="@dimen/font_large"
               android:gravity="center"
               tools:text="Нет аудиозаписей"
+              android:textColor="@color/colorSecondaryText"
             />
 
 </RelativeLayout>

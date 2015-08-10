@@ -3,6 +3,8 @@ package com.soboleva.vkmusicapp.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnAddButtonClickListener;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnDownloadButtonClickListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.presenters.SearchAudioPresenter;
 import com.soboleva.vkmusicapp.ui.adapters.AudioListAdapter;
@@ -27,12 +29,12 @@ public class SearchAudioListFragment extends AudioListFragment {
         mBaseListPresenter = new SearchAudioPresenter(this, bundle.getString(REQUEST_KEY));
         mBaseListPresenter.getItems();
 
-        setListAdapter(new AudioListAdapter(new AudioListAdapter.OnDownloadButtonClickListener() {
+        setListAdapter(new AudioListAdapter(new OnDownloadButtonClickListener() {
             @Override
             public void onClick(Audio audio) {
                 downloadAudio(audio);
             }
-        }, new AudioListAdapter.OnAddButtonClickListener() {
+        }, new OnAddButtonClickListener() {
             @Override
             public void onClick(Audio audio) {
                 addAudio(audio);
@@ -44,6 +46,7 @@ public class SearchAudioListFragment extends AudioListFragment {
 
 
     }
+
 
 
 }

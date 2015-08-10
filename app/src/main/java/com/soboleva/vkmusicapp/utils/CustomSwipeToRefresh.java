@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import timber.log.Timber;
 
 public class CustomSwipeToRefresh extends SwipeRefreshLayout {
 
@@ -31,11 +30,7 @@ public class CustomSwipeToRefresh extends SwipeRefreshLayout {
                 final float eventX = event.getX();
                 float xDiff = Math.abs(eventX - mPrevX);
 
-                Timber.d("xDiff = %f",  xDiff);
-
-
                 if (xDiff > mTouchSlop) {
-                    Timber.d("Swipe more then 25");
                     return false;
                 }
         }

@@ -1,10 +1,19 @@
 <resources>
-    <string name="app_name">VK Music App</string>
-    <string name="no_audio">Нет аудиозаписей</string>
-    <string name="no_internet">Нет соединения...</string>
-    <string name="internet">Появилось соединение!</string>
-    <string name="error">Произошла ошибка</string>
-    <string name="authorize">ВХОД</string>
-    <string name="logout">Logout</string>
+    <string name="app_name">VK Music</string>
+    <string name="no_audio">No audio</string>
+    <string name="no_internet">No internet connection...</string>
+    <string name="no_access">No access \n¯\\_(ツ)_/¯</string>
+    <string name="error">Something went wrong\nಠ_ಠ</string>
+    <string name="authorize">LOGIN</string>
+    <string name="logout">Log out</string>
     <string name="search">Search</string>
+    <string name="search_hint">Search...</string>
+    <string name="my_audio">My music</string>
+    <string name="friends">My friends</string>
+    <string name="about">About application</string>
+    <string name="dialog_title_about">VK Music v1.0</string>
+    <string name="rate">Rate</string>
+    <string name="dialog_content_about">VK Music is free application for downloading and managing your music
+        from VKontakte. \n\nIf you have any comments or suggestions please contact me via e-mail:
+        </string>
 </resources>

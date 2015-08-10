@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import com.soboleva.vkmusicapp.R;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnAddButtonClickListener;
+import com.soboleva.vkmusicapp.api.vk.callbacks.OnDownloadButtonClickListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioWaitingEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageInterruptDownloadingEvent;
@@ -27,21 +29,14 @@ public class AudioListAdapter extends BaseAdapter {
     private boolean mAddAble;
 
 
-    public static interface OnDownloadButtonClickListener {
-        void onClick(Audio audio);
-    }
-
-    public static interface OnAddButtonClickListener {
-        void onClick(Audio audio);
-    }
-
     public AudioListAdapter(OnDownloadButtonClickListener onDownloadButtonClickListener) {
         mAudioList = new ArrayList<>();
         mDownloadButtonClickListener = onDownloadButtonClickListener;
         mAddAble = false;
     }
 
-    public AudioListAdapter(OnDownloadButtonClickListener onDownloadButtonClickListener, OnAddButtonClickListener onAddButtonClickListener) {
+    public AudioListAdapter(OnDownloadButtonClickListener onDownloadButtonClickListener,
+                            OnAddButtonClickListener onAddButtonClickListener) {
         mAudioList = new ArrayList<>();
         mDownloadButtonClickListener = onDownloadButtonClickListener;
         mOnAddButtonClickListener = onAddButtonClickListener;
@@ -151,16 +146,18 @@ public class AudioListAdapter extends BaseAdapter {
                     Timber.d("onClick for interrupting downloading");
                     EventBus.getDefault().post(new MessageInterruptDownloadingEvent(audio.getID()));
                     audio.setDownloading(false);
-                    changeProgress(audio.getID(), 0);
+                    //changeProgress(audio.getID(), 0);
+                    audio.setDownloadingProgress(0);
                 } else { //audio is waiting
                     Timber.d("onClick for interrupting waiting audio");
                     EventBus.getDefault().post(new MessageInterruptDownloadingEvent(audio.getID()));
                     audio.setWaiting(false);
                 }
+                notifyDataSetChanged();
             }
         });
 
-        checkFabButtonState(holder.mFabButton, audio);
+        AudioAdapterHelper.checkFabButtonState(holder.mFabButton, audio);
 
 
         if (mAddAble) {
@@ -181,35 +178,14 @@ public class AudioListAdapter extends BaseAdapter {
     }
 
     public void changeAudioStates(String audioID, String state, boolean value) {
-        switch (state) {
-            case STATE_DOWNLOADING:
-                for (Audio audio : mAudioList) {
-                    if (audio.getID().equals(audioID)) {
-                        Timber.d("нужный id, change to %b", state);
-                        audio.setDownloading(value);
-                    }
-                }
-                break;
-            case STATE_WAITING:
-                for (Audio audio : mAudioList) {
-                    if (audio.getID().equals(audioID)) {
-                        Timber.d("нужный id, change to %b", state);
-                        audio.setWaiting(value);
-                    }
-                }
-                break;
-        }
 
+        AudioAdapterHelper.changeAudioStates(audioID, state, value, mAudioList);
         this.notifyDataSetChanged();
     }
 
     public void changeProgress(String audioID, int progress) {
-        for (Audio audio : mAudioList) {
-            if (audio.getID().equals(audioID)) {
-                audio.setDownloadingProgress(progress);
-                Timber.d("Progress == %d", progress);
-            }
-        }
+
+        AudioAdapterHelper.changeProgress(audioID, progress, mAudioList);
         this.notifyDataSetChanged();
     }
 
@@ -218,52 +194,12 @@ public class AudioListAdapter extends BaseAdapter {
         return false;
     }
 
-    private void checkFabButtonState(FabButton fabButton, Audio audio) {
 
-        fabButton.setProgress(audio.getDownloadingProgress());
-
-
-        if (audio.getDownloadingProgress() != 100) {
-            if (audio.isWaiting() || audio.isDownloading()) {
-                if (fabButton.getDrawablesRes()[0] != R.drawable.ic_cancel ||
-                        fabButton.getDrawablesRes()[1] != R.drawable.ic_done) {
-                    fabButton.setIcon(R.drawable.ic_cancel, R.drawable.ic_done);
-                    Timber.d("FabButton sets cancelable");
-                }
-
-            } else { //normal state
-                if (fabButton.getDrawablesRes()[0] != R.drawable.ic_downloading ||
-                        fabButton.getDrawablesRes()[1] != R.drawable.ic_done) {
-                    fabButton.setIcon(R.drawable.ic_downloading, R.drawable.ic_done);
-                    Timber.d("FabButton sets normal");
-                }
-            }
-        }
-
-        if (audio.isWaiting() != fabButton.isIndeterminate()) {
-            fabButton.showProgress(audio.isWaiting() || audio.isDownloading());
-            fabButton.setIndeterminate(audio.isWaiting());
-        }
-
-        //if audio is downloaded -> show end bitmap
-        //else no
-        if((audio.getDownloadingProgress() == 100) != fabButton.isShowEndBitmap()) {
-           fabButton.setShowEndBitmap(audio.getDownloadingProgress() == 100);
-            if (fabButton.isShowEndBitmap()) {
-                fabButton.setIcon(R.drawable.ic_done, R.drawable.ic_done);
-            }
-        }
-
-    }
 
     public void remove(int position) {
         mAudioList.remove(position);
         notifyDataSetChanged();
     }
 
-//    public void insert(int position, Audio item) {
-//        mAudioList.add(position, item);
-//        notifyDataSetChanged();
-//    }
 
 }

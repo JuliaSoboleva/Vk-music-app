@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Музика ВКонтакті</string>
+    <string name="no_audio">Немає аудіозаписів</string>
+    <string name="no_internet">Немає з\'єднання з інтернетом...</string>
+    <string name="no_access">Немає доступу \n¯\\_(ツ)_/¯</string>
+    <string name="error">Виникла помилка\nಠ_ಠ</string>
+    <string name="authorize">ВХІД</string>
+    <string name="logout">Вийти</string>
+    <string name="search">Пошук</string>
+    <string name="search_hint">Пошук...</string>
+    <string name="my_audio">Мої Аудiозаписи</string>
+    <string name="friends">Мої друзі</string>
+    <string name="about">Про додаток</string>
+    <string name="dialog_title_about">Музика ВКонтакті v1.0</string>
+    <string name="rate">Оцінити додаток</string>
+    <string name="dialog_content_about">Музика ВКонтакті - це безкоштовний додаток для завантаження та управління
+        музикою ВКонтакті. \n\nПобажання та пропозиції надсилайте на </string>
+</resources>

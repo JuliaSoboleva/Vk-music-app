@@ -1,61 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-        >
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <com.soboleva.vkmusicapp.ui.widgets.CustomImageView
+            android:id="@+id/image_profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            />
+
+    <View
+            android:id="@+id/list_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrey"
+            />
+
+    <!--android:background="@android:color/white"-->
+
+    <FrameLayout
+            android:id="@+id/friend_audio_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+    </FrameLayout>
+
 
     <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_friend_audio_activity"
-            android:layout_height="56dp"
             android:layout_width="match_parent"
-            android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            />
-
-    <LinearLayout android:id="@+id/header"
-                  android:layout_width="match_parent"
-                  android:layout_height="120dp"
-                  android:background="@drawable/blue_polygon2"
-                  android:layout_below="@id/toolbar_friend_audio_activity"
-                  android:elevation="4dp"
-            >
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_profile_photo"
-                android:layout_width="@dimen/icon_large"
-                android:layout_height="@dimen/icon_large"
-                android:layout_marginLeft="@dimen/margin_normal"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_launcher"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:layout_marginTop="@dimen/margin_normal"
-                app:border_width="2dp"
-                app:border_color="@color/colorText"
-                tools:src="@drawable/ic_launcher"
-                />
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <TextView
-                android:id="@+id/text_profile_name"
+                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_normal"
-                android:textSize="@dimen/font_normal"
-                android:textStyle="bold"
-                tools:text="Антон Головин"
-                android:textColor="@color/colorText"
-                />
-    </LinearLayout>
+                android:text="@string/app_name"
+                android:textSize="18sp"
+                android:visibility="invisible"
+                android:textColor="@android:color/white"/>
 
-    <FrameLayout android:id="@+id/friend_audio_container"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@+id/header"
-                 android:foreground="@drawable/shadow_toolbar"
+    </android.support.v7.widget.Toolbar>
 
-    />
-
-</RelativeLayout>
+</FrameLayout>

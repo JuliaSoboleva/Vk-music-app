@@ -3,6 +3,7 @@ package com.soboleva.vkmusicapp.presenters;
 import com.soboleva.vkmusicapp.api.vk.callbacks.OnAudioListDownloadedListener;
 import com.soboleva.vkmusicapp.api.vk.models.audios.Audio;
 import com.soboleva.vkmusicapp.api.vk.models.friends.Friend;
+import com.soboleva.vkmusicapp.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicapp.ui.fragments.AudioListFragment;
 import com.soboleva.vkmusicapp.ui.fragments.BaseListFragment;
 import timber.log.Timber;
@@ -28,6 +29,9 @@ public class FriendAudioPresenter extends AudioPresenter {
                 if(totalCount == 0) {
                     Timber.d("Friend has not audios");
                     ((AudioListFragment)mBaseListFragment).showMessage(BaseListFragment.STATE_NO_AUDIO);
+                    if (mBaseListFragment.getActivity() != null) {
+                        ((FriendAudioActivity) (mBaseListFragment.getActivity())).hidePhoto();
+                    }
                 } else {
                     showItems(offset, audios, totalCount);
                 }
@@ -37,7 +41,10 @@ public class FriendAudioPresenter extends AudioPresenter {
             public void onError() {
                 Timber.d("getMyAudio Error");
                 mIsDownloadingNow = false;
-                ((AudioListFragment)mBaseListFragment).showMessage(BaseListFragment.STATE_ERROR);
+                ((AudioListFragment)mBaseListFragment).showMessage(BaseListFragment.STATE_NO_ACCESS);
+                if (mBaseListFragment.getActivity() != null) {
+                    ((FriendAudioActivity) (mBaseListFragment.getActivity())).hidePhoto();
+                }
             }
         }, offset, count, mFriend.getID());
 

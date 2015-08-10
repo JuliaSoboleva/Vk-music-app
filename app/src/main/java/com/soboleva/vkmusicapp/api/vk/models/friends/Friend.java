@@ -18,6 +18,9 @@ public class Friend extends BaseData implements Serializable {
     @SerializedName("photo_100")
     private String mPhoto100;
 
+    @SerializedName("photo_200_orig")
+    private String mPhoto200;
+
     @SerializedName("online")
     private String mOnline;
 
@@ -41,6 +44,10 @@ public class Friend extends BaseData implements Serializable {
         return mPhoto100;
     }
 
+    public String getPhoto200() {
+        return mPhoto200;
+    }
+
     @Override
     public String toString() {
         return "Friend{" +
@@ -48,6 +55,7 @@ public class Friend extends BaseData implements Serializable {
                 ", mFirstName='" + mFirstName + '\'' +
                 ", mLastName='" + mLastName + '\'' +
                 ", mPhoto100='" + mPhoto100 + '\'' +
+                ", mPhoto200='" + mPhoto200 + '\'' +
                 ", mOnline='" + mOnline + '\'' +
                 '}';
     }

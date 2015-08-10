@@ -118,6 +118,9 @@ public class Audio extends BaseData {
 
     public void setWaiting(boolean isWaiting) {
         mIsWaiting = isWaiting;
+        if (mIsWaiting) {
+            mIsDownloading = false;
+        }
     }
 
 

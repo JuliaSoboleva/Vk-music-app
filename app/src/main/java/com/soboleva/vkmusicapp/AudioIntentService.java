@@ -7,7 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,7 +16,7 @@ import android.os.HandlerThread;
 import android.support.v4.app.NotificationCompat;
 import com.soboleva.vkmusicapp.utils.FileDownloader;
 import com.soboleva.vkmusicapp.utils.PathHelper;
-import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadedEvent;
+import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageAudioDownloadingEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageDownloadingProgressEvent;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageInterruptDownloadingEvent;
 import de.greenrobot.event.EventBus;
@@ -24,7 +24,6 @@ import timber.log.Timber;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.Intent.ACTION_MEDIA_SCANNER_SCAN_FILE;
 import static android.provider.MediaStore.Audio.AudioColumns.*;
@@ -39,6 +38,7 @@ public class AudioIntentService extends IntentService {
     public static final String PARAM_ARTIST = "artist";
     public static final String PARAM_TITLE = "title";
     public static final String PARAM_AUDIO_ID = "audioID";
+    public static final String PARAM_DURATION = "duration";
 
     private static final int NOTIFICATION_ID = 1;
 
@@ -53,6 +53,7 @@ public class AudioIntentService extends IntentService {
     private String mCurrentTitle;
     private String mAudioName;
     private String mAudioID;
+    private int mDuration; // in ms
 
     private File mFile;
 
@@ -107,7 +108,7 @@ public class AudioIntentService extends IntentService {
         values.put(DATE_ADDED, (int) (System.currentTimeMillis() / 1000));
         values.put(MIME_TYPE, "audio/3gpp");
         values.put(DATA, file.getAbsolutePath());
-        values.put(DURATION, getDuration(file));
+        values.put(DURATION, /*getDuration(file)*/ mDuration);
 
         ContentResolver contentResolver = getContentResolver();
 
@@ -117,7 +118,7 @@ public class AudioIntentService extends IntentService {
         // Notifiy the media application on the device
         sendBroadcast(new Intent(ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
 
-        EventBus.getDefault().post(new MessageAudioDownloadedEvent(mAudioID, false));
+        EventBus.getDefault().post(new MessageAudioDownloadingEvent(mAudioID, false));
 
     }
 
@@ -138,6 +139,7 @@ public class AudioIntentService extends IntentService {
         mCurrentArtist = extras.getString(PARAM_ARTIST);
         mCurrentTitle = extras.getString(PARAM_TITLE);
         mAudioID = extras.getString(PARAM_AUDIO_ID);
+        mDuration = 1000*extras.getInt(PARAM_DURATION);
 
         if (mInterruptedList.contains(mAudioID)){
             mInterruptedList.remove(mAudioID);
@@ -146,7 +148,7 @@ public class AudioIntentService extends IntentService {
             return;
         }
 
-        EventBus.getDefault().post(new MessageAudioDownloadedEvent(mAudioID, true));
+        EventBus.getDefault().post(new MessageAudioDownloadingEvent(mAudioID, true));
         EventBus.getDefault().post(new MessageDownloadingProgressEvent(mAudioID, 0));
 
         String desiredFilename = PathHelper.buildMp3FileName(mCurrentArtist, mCurrentTitle);
@@ -173,8 +175,8 @@ public class AudioIntentService extends IntentService {
 
         mBuilder.setContentTitle(mAudioName)
                 .setContentText("Downloading...") // todo
-                .setSmallIcon(R.drawable.ic_note_lightblue)
-                        //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_note))
+                .setSmallIcon(R.drawable.ic_note_white)
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_notification_owl))
                 .setOngoing(true);
 
         HandlerThread handlerThread = new HandlerThread("NotificationThread");
@@ -214,29 +216,31 @@ public class AudioIntentService extends IntentService {
 
     private void setNotificationOnClick(NotificationCompat.Builder builder) {
         Intent intent = new Intent();
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(mFile), "audio/*");
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        intent.setAction(Intent.ACTION_VIEW); //ACTION_GET_CONTENT);
+        intent.setDataAndType(Uri.fromFile(mFile), "audio/mp3");
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setOngoing(false);
+
     }
 
     //todo
-    private int getDuration(File file) {
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.parse(file.getAbsolutePath()));
-        int duration = mediaPlayer.getDuration();
-
-        mediaPlayer.release();
-
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(minutes);
-
-        Timber.d("duration == %d min, %d sec", minutes, seconds);
-
-        mediaPlayer.release();
-        return duration;
-    }
+//    private int getDuration(File file) {
+//        MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.parse(file.getAbsolutePath()));
+//        int duration = mediaPlayer.getDuration();
+//
+//        mediaPlayer.release();
+//
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(minutes);
+//
+//        Timber.d("duration == %d min, %d sec", minutes, seconds);
+//
+//        mediaPlayer.release();
+//        return duration;
+//    }
 
     public void onEventBackgroundThread(MessageInterruptDownloadingEvent event) {
         Timber.d("Для того аудиио отмена? %b", mAudioID.equals(event.getAudioID()));
