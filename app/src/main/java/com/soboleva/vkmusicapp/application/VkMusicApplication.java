@@ -2,6 +2,7 @@ package com.soboleva.vkmusicapp.application;
 
 import android.app.Application;
 import android.content.Context;
+import com.soboleva.vkmusicapp.BuildConfig;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
@@ -38,7 +39,10 @@ public class VkMusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Timber.plant(new Timber.DebugTree());
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+
         mVkApi.initialize(getApplicationContext());
 
         //ImageLoaderWrapper.getInstance().init(getApplicationContext());

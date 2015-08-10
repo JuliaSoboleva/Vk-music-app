@@ -36,17 +36,11 @@ public class AudioListFragment extends BaseListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Timber.d("OnStart");
         getListView().setEmptyView(
                 noItems(getResources().getString(R.string.no_audio)));
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Timber.d("OnCreate");
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

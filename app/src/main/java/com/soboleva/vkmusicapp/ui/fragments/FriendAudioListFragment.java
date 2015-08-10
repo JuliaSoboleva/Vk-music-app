@@ -55,18 +55,7 @@ public class FriendAudioListFragment extends AudioListFragment {
         mBaseListPresenter = new FriendAudioPresenter(this, mFriend);
         mBaseListPresenter.getItems();
 
-        setListAdapter(new AudioListAdapter(new OnDownloadButtonClickListener() {
-            @Override
-            public void onClick(Audio audio) {
-                downloadAudio(audio);
-            }
-        }, new OnAddButtonClickListener() {
-            @Override
-            public void onClick(Audio audio) {
-                addAudio(audio);
-                audio.setAdded(true);
-            }
-        }));
+
     }
 
     @Override
@@ -83,6 +72,19 @@ public class FriendAudioListFragment extends AudioListFragment {
         mPaddingView.setClickable(true);
 
         getListView().addHeaderView(mPaddingView);
+
+        setListAdapter(new AudioListAdapter(new OnDownloadButtonClickListener() {
+            @Override
+            public void onClick(Audio audio) {
+                downloadAudio(audio);
+            }
+        }, new OnAddButtonClickListener() {
+            @Override
+            public void onClick(Audio audio) {
+                addAudio(audio);
+                audio.setAdded(true);
+            }
+        }));
 
         mNameTitle = (TextView)mPaddingView.findViewById(R.id.friend_name_on_padding);
         mNameTitle.setText(mFriend.getFirstName() + " " + mFriend.getLastName());

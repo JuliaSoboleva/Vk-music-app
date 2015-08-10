@@ -29,9 +29,6 @@ public class MainActivity extends BaseActivity {
 
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         Timber.d("fingerprints = %s", fingerprints);
-
-
-
     }
 
     @Override

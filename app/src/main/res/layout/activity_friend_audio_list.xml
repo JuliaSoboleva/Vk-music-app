@@ -9,7 +9,7 @@
     <com.soboleva.vkmusicapp.ui.widgets.CustomImageView
             android:id="@+id/image_profile_photo"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="@dimen/parallax_image_height"
             android:scaleType="centerCrop"
             />
 
@@ -19,8 +19,6 @@
             android:layout_height="wrap_content"
             android:background="@color/colorGrey"
             />
-
-    <!--android:background="@android:color/white"-->
 
     <FrameLayout
             android:id="@+id/friend_audio_container"
