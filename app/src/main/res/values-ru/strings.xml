@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Музыка ВКонтакте</string>
+    <string name="no_audio">Нет аудиозаписей</string>
+    <string name="no_internet">Нет соединения...</string>
+    <string name="no_friends">Нет друзей</string>
+    <string name="no_access">Нет доступа \n¯\\_(ツ)_/¯</string>
+    <string name="error">Произошла ошибка\nಠ_ಠ</string>
+    <string name="authorize">ВХОД</string>
+    <string name="logout">Выйти</string>
+    <string name="search">Поиск</string>
+    <string name="search_hint">Поиск...</string>
+    <string name="my_audio">Мои аудиозаписи</string>
+    <string name="friends">Мои друзья</string>
+    <string name="about">О приложении</string>
+    <string name="dialog_title_about">Музыка ВКонтакте v1.0</string>
+    <string name="rate">Оценить приложение</string>
+    <string name="dialog_content_about">Музыка ВКонтакте - это бесплатное приложение для скачивания и управления музыкой
+        ВКонтакте. \n\nПожелания и предложения отправляйте на </string>
+</resources>
