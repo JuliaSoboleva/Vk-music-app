@@ -15,8 +15,8 @@
             android:elevation="4dp"
 
 
-            android:textColor="@color/colorPrimaryLight"
-            app:pstsTextColorSelected="@color/colorText"
+            android:textColorPrimary="@color/colorText"
+
 
             app:pstsUnderlineColor="@color/colorPrimaryDark"
             app:pstsUnderlineHeight="1dp"
@@ -27,6 +27,7 @@
 
 
             />
+    <!--app:pstsTextColorSelected="@color/colorText"-->
     <!--android:background="@color/colorPrimary"-->
     <!--app:pstsTextColorSelected = "@color/colorText"-->
 

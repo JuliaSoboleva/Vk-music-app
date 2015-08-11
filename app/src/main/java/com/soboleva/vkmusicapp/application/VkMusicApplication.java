@@ -3,7 +3,6 @@ package com.soboleva.vkmusicapp.application;
 import android.app.Application;
 import android.content.Context;
 import com.crashlytics.android.Crashlytics;
-import com.soboleva.vkmusicapp.BuildConfig;
 import com.soboleva.vkmusicapp.api.vk.VkApi;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
@@ -42,9 +41,9 @@ public class VkMusicApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
+//        if (BuildConfig.DEBUG) {
+//            Timber.plant(new Timber.DebugTree());
+//        }
 
         mVkApi.initialize(getApplicationContext());
 

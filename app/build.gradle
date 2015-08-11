@@ -9,6 +9,7 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.github.ben-manes.versions'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -26,31 +27,54 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            def Properties localProperties = new Properties()
+            localProperties.load(new FileInputStream(file('../local.properties')))
+            assert localProperties['keystore.props.file'];
+
+            def Properties keyProperties = new Properties()
+            keyProperties.load(new FileInputStream(file(localProperties['keystore.props.file'])))
+
+
+            storeFile file(keyProperties['path'])
+            storePassword keyProperties['storePass']
+            keyAlias keyProperties['alias']
+            keyPassword keyProperties['pass']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
         }
     }
 }
 
 dependencies {
-    //vk, parsing
+    // vk, parsing
     compile 'com.vk:androidsdk:+'
     compile 'com.google.code.gson:gson:2.3.1'
-    //debug
-    compile 'com.jakewharton.timber:timber:2.5.1'
-    //support
+    // debug
+    compile 'com.jakewharton.timber:timber:3.1.0'
+    // support
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:palette-v7:22.2.1'
-    //ui
-    compile 'de.hdodenhof:circleimageview:1.2.2'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
-    compile 'com.github.traex.rippleeffect:library:1.2.4'
-    compile 'com.nispok:snackbar:2.10.8'
-    compile project(':fabbutton')
+    // UI
     compile project(':swipemenu')
+    compile 'de.hdodenhof:circleimageview:1.3.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
+    compile 'com.github.traex.rippleeffect:library:1.3'
+    compile 'com.nispok:snackbar:2.11.0'
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.bumptech.glide:glide:3.6.1'
@@ -58,5 +82,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
         transitive = true;
     }
-
+    compile project(':fabbutton')
 }

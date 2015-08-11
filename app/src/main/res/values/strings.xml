@@ -2,6 +2,7 @@
     <string name="app_name">VK Music</string>
     <string name="no_audio">No audio</string>
     <string name="no_internet">No internet connection...</string>
+    <string name="no_friends">No friends</string>
     <string name="no_access">No access \n¯\\_(ツ)_/¯</string>
     <string name="error">Something went wrong\nಠ_ಠ</string>
     <string name="authorize">LOGIN</string>

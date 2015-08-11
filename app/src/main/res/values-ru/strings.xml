@@ -2,6 +2,7 @@
     <string name="app_name">Музыка ВКонтакте</string>
     <string name="no_audio">Нет аудиозаписей</string>
     <string name="no_internet">Нет соединения...</string>
+    <string name="no_friends">Нет друзей</string>
     <string name="no_access">Нет доступа \n¯\\_(ツ)_/¯</string>
     <string name="error">Произошла ошибка\nಠ_ಠ</string>
     <string name="authorize">ВХОД</string>

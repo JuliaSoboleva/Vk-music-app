@@ -2,6 +2,7 @@
     <string name="app_name">Музика ВКонтакті</string>
     <string name="no_audio">Немає аудіозаписів</string>
     <string name="no_internet">Немає з\'єднання з інтернетом...</string>
+    <string name="no_friends">Немає друзів</string>
     <string name="no_access">Немає доступу \n¯\\_(ツ)_/¯</string>
     <string name="error">Виникла помилка\nಠ_ಠ</string>
     <string name="authorize">ВХІД</string>

@@ -3,10 +3,15 @@ package com.soboleva.vkmusicapp.ui.fragments;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.api.vk.models.BaseData;
 import com.soboleva.vkmusicapp.presenters.AudioPresenter;
 import com.soboleva.vkmusicapp.presenters.BaseListPresenter;
+import com.soboleva.vkmusicapp.utils.NetworkHelper;
 import com.soboleva.vkmusicapp.utils.eventBusMessages.MessageNeedToUpdateEvent;
 import de.greenrobot.event.EventBus;
 import timber.log.Timber;
@@ -19,8 +24,13 @@ public abstract class BaseListFragment extends ListFragment {
     public static final int STATE_NO_INTERNET = 1;
     public static final int STATE_ERROR = 2;
     public static final int STATE_NO_ACCESS = 3;
+    public static final int STATE_NO_FRIENDS = 4;
 
     protected BaseListPresenter mBaseListPresenter;
+
+    protected ImageView mEmptyImageView;
+    protected TextView mEmptyTextView;
+    protected View mEmptyView;
 
 
     @Override
@@ -60,6 +70,75 @@ public abstract class BaseListFragment extends ListFragment {
     }
     public abstract void showItems(List<? extends BaseData> dataList);
     public abstract void showWithAddedItems(List<? extends BaseData> dataList);
+
+    public void showMessage(int stateID) {
+        mEmptyImageView.setVisibility(View.VISIBLE);
+        mEmptyTextView.setVisibility(View.VISIBLE);
+        switch (stateID) {
+            case STATE_NO_AUDIO:
+                mEmptyImageView.setImageResource(R.drawable.ic_owl_headphones);
+                mEmptyTextView.setText(R.string.no_audio);
+                break;
+            case STATE_NO_INTERNET:
+                mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                mEmptyTextView.setText(R.string.no_internet);
+
+                break;
+            case STATE_NO_ACCESS:
+                mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                mEmptyTextView.setText(R.string.no_access);
+                //todo
+                break;
+            case STATE_ERROR:
+                if (this.getActivity()!=null && !NetworkHelper.isNetworkAvailable(this.getActivity().getApplicationContext())) {
+                    mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                    mEmptyTextView.setText(R.string.no_internet);
+                }
+                else {
+                    mEmptyImageView.setImageResource(R.drawable.ic_pug);
+                    mEmptyTextView.setText(R.string.error);
+                }
+                break;
+            case STATE_NO_FRIENDS:
+                if (this.getActivity()!=null && !NetworkHelper.isNetworkAvailable(this.getActivity().getApplicationContext())) {
+                    mEmptyImageView.setImageResource(R.drawable.ic_owl);
+                    mEmptyTextView.setText(R.string.no_internet);
+                }
+                else {
+                    mEmptyImageView.setImageResource(R.drawable.ic_pug);
+                    mEmptyTextView.setText(R.string.no_friends);
+                }
+                break;
+            default:
+                break;
+
+        }
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getListView().setEmptyView(
+                noItems(getResources().getString(R.string.no_audio)));
+
+    }
+
+    private View noItems(String text) {
+
+        mEmptyView = getActivity().getLayoutInflater().inflate(R.layout.view_empty_list, getListView(), false);
+
+        mEmptyImageView = (ImageView) mEmptyView.findViewById(R.id.picture_empty_list);
+        mEmptyTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_list);
+
+        mEmptyImageView.setVisibility(View.INVISIBLE);
+
+        mEmptyTextView.setVisibility(View.INVISIBLE);
+
+        ((ViewGroup) getListView().getParent()).addView(mEmptyView, 0);
+        return mEmptyView;
+    }
 
 
     public void onEventMainThread(MessageNeedToUpdateEvent event){

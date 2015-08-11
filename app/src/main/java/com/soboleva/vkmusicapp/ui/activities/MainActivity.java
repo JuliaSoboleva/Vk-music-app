@@ -4,19 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import com.soboleva.vkmusicapp.R;
 import com.soboleva.vkmusicapp.presenters.MainPresenter;
 import com.vk.sdk.util.VKUtil;
 import timber.log.Timber;
 
+import java.util.Arrays;
+
 public class MainActivity extends BaseActivity {
-
-    private Button mAuthorizeButton;
-
-
-
-    MainPresenter mMainPresenter;
+    private MainPresenter mMainPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +24,7 @@ public class MainActivity extends BaseActivity {
         setupUI();
 
         String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-        Timber.d("fingerprints = %s", fingerprints);
+        Timber.d("fingerprints = %s", Arrays.toString(fingerprints));
     }
 
     @Override
@@ -42,8 +38,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupUI() {
-        mAuthorizeButton = (Button) findViewById(R.id.authorize);
-        mAuthorizeButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.authorize).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -57,15 +52,10 @@ public class MainActivity extends BaseActivity {
                             }
                         }, 500);
                         break;
-
-                    default:
-                        return;
                 }
             }
         });
     }
-
-    ;
 
     public void startAudioActivity() {
         Timber.d("MainActivity -> startAudioActivity()");
