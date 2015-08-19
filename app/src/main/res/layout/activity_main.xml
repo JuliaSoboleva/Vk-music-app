@@ -20,20 +20,20 @@
                    android:src="@drawable/ic_owl_headphones"
                    android:layout_centerInParent="true"
                 />
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@string/app_name"
-                  android:textSize="@dimen/font_larger"
-                  android:textColor="@color/colorText"
-                  android:gravity="center"
-                  android:layout_above="@id/start_logo"
-                  android:layout_marginBottom="50dp"
+        <TextView
+                android:id="@+id/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="@dimen/font_larger"
+                android:textColor="@color/colorText"
+                android:gravity="center"
+                android:layout_above="@id/start_logo"
+                android:layout_marginBottom="50dp"
                 />
 
 
-
     </com.andexert.library.RippleView>
-
 
 
     <com.andexert.library.RippleView
@@ -52,26 +52,24 @@
             ripple:rv_framerate="12"
 
             >
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:src="@drawable/ic_round"
-               android:layout_centerInParent="true"
-               android:layout_alignParentBottom="true"
-            />
-    <Button
-            android:id="@+id/authorize"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            android:text="@string/authorize"
-            android:textSize="@dimen/font_large"
-            android:textColor="@color/colorText"
-            />
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/ic_round"
+                   android:layout_centerInParent="true"
+                   android:layout_alignParentBottom="true"
+                />
+        <Button
+                android:id="@+id/authorize"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:layout_alignParentBottom="true"
+                android:text="@string/authorize"
+                android:textSize="@dimen/font_large"
+                android:textColor="@color/colorText"
+                />
     </com.andexert.library.RippleView>
-
-
 
 
 </RelativeLayout>

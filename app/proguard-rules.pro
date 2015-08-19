@@ -99,6 +99,6 @@
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class com.soboleva.vkmusicapp.api.vk.models.** { *; }
+-keep class com.soboleva.vkmusicloader.vk.models.** { *; }
 ##--------------- End: Gson ----------
 

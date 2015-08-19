@@ -6,7 +6,7 @@
              android:layout_height="match_parent"
              android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <com.soboleva.vkmusicapp.ui.widgets.CustomImageView
+    <com.soboleva.vkmusicloader.ui.widgets.CustomImageView
             android:id="@+id/image_profile_photo"
             android:layout_width="match_parent"
             android:layout_height="@dimen/parallax_image_height"

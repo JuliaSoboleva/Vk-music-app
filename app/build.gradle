@@ -21,10 +21,10 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.soboleva.vkmusicapp"
+        applicationId "com.soboleva.vkmusicloader"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 1
+        versionCode 4
         versionName "1.0"
     }
 

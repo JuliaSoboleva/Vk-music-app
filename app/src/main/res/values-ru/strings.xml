@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Музыка ВКонтакте</string>
+    <string name="app_name">VK Music Loader</string>
     <string name="no_audio">Нет аудиозаписей</string>
     <string name="no_internet">Нет соединения...</string>
     <string name="no_friends">Нет друзей</string>

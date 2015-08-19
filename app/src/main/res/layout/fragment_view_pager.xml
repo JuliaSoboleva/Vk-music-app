@@ -31,14 +31,14 @@
     <!--android:background="@color/colorPrimary"-->
     <!--app:pstsTextColorSelected = "@color/colorText"-->
 
-    <com.soboleva.vkmusicapp.ui.CustomViewPager
+    <com.soboleva.vkmusicloader.ui.CustomViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tabs"
 
             >
-    </com.soboleva.vkmusicapp.ui.CustomViewPager>
+    </com.soboleva.vkmusicloader.ui.CustomViewPager>
 
     <!--<FrameLayout android:layout_width="match_parent"-->
                  <!--android:layout_height="match_parent"-->

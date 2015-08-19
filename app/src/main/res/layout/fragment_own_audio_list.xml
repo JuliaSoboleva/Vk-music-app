@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.soboleva.vkmusicapp.utils.CustomSwipeToRefresh
+<com.soboleva.vkmusicloader.utils.CustomSwipeToRefresh
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -20,4 +20,4 @@
 
     </FrameLayout>
 
-</com.soboleva.vkmusicapp.utils.CustomSwipeToRefresh>
+</com.soboleva.vkmusicloader.utils.CustomSwipeToRefresh>

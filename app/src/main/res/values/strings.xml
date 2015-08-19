@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VK Music</string>
+    <string name="app_name">VK Music Loader</string>
     <string name="no_audio">No audio</string>
     <string name="no_internet">No internet connection...</string>
     <string name="no_friends">No friends</string>
