@@ -16,4 +16,8 @@
     <string name="rate">Оценить приложение</string>
     <string name="dialog_content_about">Музыка ВКонтакте - это бесплатное приложение для скачивания и управления музыкой
         ВКонтакте. \n\nПожелания и предложения отправляйте на </string>
+    <string name="downloading">Скачивается...</string>
+    <string name="canceled">Отменено</string>
+    <string name="complete">Скачивание завершено</string>
+
 </resources>

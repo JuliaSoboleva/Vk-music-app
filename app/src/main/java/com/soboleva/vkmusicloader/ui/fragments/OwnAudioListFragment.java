@@ -50,6 +50,14 @@ public class OwnAudioListFragment extends AudioListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBaseListPresenter = new OwnAudioPresenter(this);
+
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mBaseListPresenter.getItems();
 
         setListAdapter(new AudioListAdapter(new OnDownloadButtonClickListener() {
@@ -59,12 +67,6 @@ public class OwnAudioListFragment extends AudioListFragment {
                 downloadAudio(audio);
             }
         }));
-
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         setSwipeToRefresh();
 

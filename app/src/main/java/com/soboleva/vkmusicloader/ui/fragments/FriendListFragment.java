@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
-import com.soboleva.vkmusicloader.vk.models.BaseData;
-import com.soboleva.vkmusicloader.vk.models.friends.Friend;
 import com.soboleva.vkmusicloader.presenters.FriendPresenter;
 import com.soboleva.vkmusicloader.ui.activities.FriendAudioActivity;
 import com.soboleva.vkmusicloader.ui.adapters.FriendListAdapter;
 import com.soboleva.vkmusicloader.utils.NetworkHelper;
+import com.soboleva.vkmusicloader.vk.models.BaseData;
+import com.soboleva.vkmusicloader.vk.models.friends.Friend;
 
 import java.util.List;
 
@@ -28,14 +28,17 @@ public class FriendListFragment extends BaseListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBaseListPresenter = new FriendPresenter(this);
-        mBaseListPresenter.getItems();
-
-        setListAdapter(new FriendListAdapter(getActivity()));
     }
+
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mBaseListPresenter.getItems();
+        setListAdapter(new FriendListAdapter(getActivity()));
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

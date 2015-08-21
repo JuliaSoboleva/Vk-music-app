@@ -174,7 +174,7 @@ public class AudioIntentService extends IntentService {
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         mBuilder.setContentTitle(mAudioName)
-                .setContentText("Downloading...") // todo
+                .setContentText(getResources().getString(R.string.downloading))
                 .setSmallIcon(R.drawable.ic_note_white)
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_notification_owl))
                 .setOngoing(true);
@@ -198,10 +198,10 @@ public class AudioIntentService extends IntentService {
                 } else {
 
                     if (mFileDownloader.isInterrupted()) {
-                        mBuilder.setContentText("Canceled")
+                        mBuilder.setContentText(getResources().getString(R.string.canceled))
                                 .setProgress(0, 0, false);
                     } else {
-                        mBuilder.setContentText("Download complete") // todo
+                        mBuilder.setContentText(getResources().getString(R.string.complete))
                                 .setProgress(0, 0, false);
                     }
 

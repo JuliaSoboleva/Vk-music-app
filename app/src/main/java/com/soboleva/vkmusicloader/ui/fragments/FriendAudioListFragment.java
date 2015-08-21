@@ -54,7 +54,6 @@ public class FriendAudioListFragment extends AudioListFragment {
         mFriend = (Friend) getArguments().getSerializable(FriendAudioActivity.FRIEND);
 
         mBaseListPresenter = new FriendAudioPresenter(this, mFriend);
-        mBaseListPresenter.getItems();
 
 
     }
@@ -62,6 +61,8 @@ public class FriendAudioListFragment extends AudioListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mBaseListPresenter.getItems();
 
         int parallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
 

@@ -17,4 +17,7 @@
     <string name="dialog_content_about">VK Music is free application for downloading and managing your music
         from VKontakte. \n\nIf you have any comments or suggestions please contact me via e-mail:
         </string>
+    <string name="downloading">Downloading...</string>
+    <string name="canceled">Canceled</string>
+    <string name="complete">Download completed</string>
 </resources>
