@@ -25,6 +25,7 @@ This app was created with educational purposes. It was bocked by Google Play, so
 * <a href="https://github.com/bumptech/glide"> Glide </a>
 * <a href="https://github.com/afollestad/material-dialogs"> Material Dialogs </a>
 * <a href="https://developer.android.com/reference/android/support/v7/graphics/Palette.html"> Palette </a>
+* <a href="https://github.com/greenrobot/EventBus"> EventBus </a>
 
 
 <p>
