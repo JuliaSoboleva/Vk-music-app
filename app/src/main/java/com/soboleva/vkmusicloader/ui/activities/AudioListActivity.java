@@ -16,6 +16,7 @@ import com.soboleva.vkmusicloader.presenters.AudioActivityPresenter;
 import com.soboleva.vkmusicloader.ui.fragments.AboutDialog;
 import com.soboleva.vkmusicloader.ui.fragments.SearchAudioListFragment;
 import com.soboleva.vkmusicloader.ui.fragments.ViewPagerFragment;
+import com.soboleva.vkmusicloader.utils.FontUtil;
 import timber.log.Timber;
 
 public class AudioListActivity extends BaseActivity {
@@ -133,7 +134,7 @@ public class AudioListActivity extends BaseActivity {
         mToolbar.inflateMenu(R.menu.main_menu);
 
         TextView toolbarTitle = (TextView)findViewById(R.id.audio_activity_toolbar_title);
-        toolbarTitle.setTypeface(MainActivity.mFont);
+        FontUtil.apply(toolbarTitle);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new ViewPagerFragment())

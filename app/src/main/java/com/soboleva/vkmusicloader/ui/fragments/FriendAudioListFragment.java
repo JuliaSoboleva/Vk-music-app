@@ -12,14 +12,14 @@ import android.widget.TextView;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.soboleva.vkmusicloader.R;
+import com.soboleva.vkmusicloader.presenters.FriendAudioPresenter;
+import com.soboleva.vkmusicloader.ui.activities.FriendAudioActivity;
+import com.soboleva.vkmusicloader.ui.adapters.AudioListAdapter;
+import com.soboleva.vkmusicloader.utils.FontUtil;
 import com.soboleva.vkmusicloader.vk.callbacks.OnAddButtonClickListener;
 import com.soboleva.vkmusicloader.vk.callbacks.OnDownloadButtonClickListener;
 import com.soboleva.vkmusicloader.vk.models.audios.Audio;
 import com.soboleva.vkmusicloader.vk.models.friends.Friend;
-import com.soboleva.vkmusicloader.presenters.FriendAudioPresenter;
-import com.soboleva.vkmusicloader.ui.activities.FriendAudioActivity;
-import com.soboleva.vkmusicloader.ui.activities.MainActivity;
-import com.soboleva.vkmusicloader.ui.adapters.AudioListAdapter;
 
 public class FriendAudioListFragment extends AudioListFragment {
 
@@ -90,7 +90,7 @@ public class FriendAudioListFragment extends AudioListFragment {
 
         mNameTitle = (TextView)mPaddingView.findViewById(R.id.friend_name_on_padding);
         mNameTitle.setText(mFriend.getFirstName() + " " + mFriend.getLastName());
-        mNameTitle.setTypeface(MainActivity.mFont);
+        FontUtil.apply(mNameTitle);
 
         mGradient = mPaddingView.findViewById(R.id.gradient);
 

@@ -17,6 +17,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.soboleva.vkmusicloader.ImageLoaderWrapper;
 import com.soboleva.vkmusicloader.R;
+import com.soboleva.vkmusicloader.utils.FontUtil;
 import com.soboleva.vkmusicloader.vk.models.friends.Friend;
 import com.soboleva.vkmusicloader.presenters.FriendAudioActivityPresenter;
 import com.soboleva.vkmusicloader.ui.fragments.FriendAudioListFragment;
@@ -75,7 +76,7 @@ public class FriendAudioActivity extends BaseActivity implements ObservableScrol
 
         mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         mToolbarTitle.setText((mFriend.getFirstName() + " " + mFriend.getLastName()));
-        mToolbarTitle.setTypeface(MainActivity.mFont);
+        FontUtil.apply(mToolbarTitle);
 
 
         mImageView = (CustomImageView)findViewById(R.id.image_profile_photo);
