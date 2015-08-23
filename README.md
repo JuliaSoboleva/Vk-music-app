@@ -11,7 +11,7 @@ VK Music Loader
 VK Music Loader is open source project which was implemented with Material Design for downloading, searching and managing music from vk.com.
 
 <p>
-This app was created with educational purposes. It was bocked by Google Play, so now it's available <a href="https://raw.githubusercontent.com/JuliaSoboleva/Vk-music-app/master/raw/app.apk">here.</a>
+This app was created with educational purposes. It was blocked by Google Play, so now it's available <a href="https://raw.githubusercontent.com/JuliaSoboleva/Vk-music-app/master/raw/app.apk">here.</a>
 </p>
 
 ### Implemented elements and effects
